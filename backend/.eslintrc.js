@@ -10,7 +10,7 @@ module.exports = {
     'plugin:@typescript-eslint/recommended',
     'plugin:prettier/recommended',
   ],
-  ignorePatterns: ['.eslintrc.js, tsconfig.json'],
+  ignorePatterns: ['.eslintrc.js', 'tsconfig.json'],
   settings: {
     react: {
       version: 'detect',
@@ -19,8 +19,11 @@ module.exports = {
   overrides: [],
   parser: '@typescript-eslint/parser',
   parserOptions: {
-    ecmaVersion: 'latest',
+    ecmaVersion: 2021,
     sourceType: 'module',
+    ecmaFeatures: {
+      jsx: true,
+    },
   },
   plugins: ['@typescript-eslint'],
   rules: {

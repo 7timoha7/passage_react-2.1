@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { Box, Card, CardContent, Grid, List } from '@mui/material';
+import { Card, CardContent, Grid, List } from '@mui/material';
 import MapsHomeWorkIcon from '@mui/icons-material/MapsHomeWork';
 import ListItemButton from '@mui/material/ListItemButton';
 import FavoriteIcon from '@mui/icons-material/Favorite';
