@@ -28,7 +28,7 @@ export interface IProduct {
   cod: string;
   dimensions: string;
   weight: string;
-  image: string | null;
+  images: string[] | null;
   price: number;
 }
 

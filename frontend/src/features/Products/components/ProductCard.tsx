@@ -32,8 +32,8 @@ const ProductCard: React.FC<Props> = ({ product }) => {
   const user = useAppSelector(selectUser);
 
   let imgProduct = noImage;
-  if (product.image) {
-    imgProduct = apiURL + product.image;
+  if (product.images.length) {
+    imgProduct = apiURL + product.images[0];
   }
 
   useEffect(() => {

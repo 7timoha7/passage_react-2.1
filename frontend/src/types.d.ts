@@ -70,7 +70,26 @@ export interface ProductType {
   cod: string;
   dimensions: string;
   weight: string;
-  image: string | null;
+  images: string[];
+  price: number;
+}
+
+export interface ImgType {
+  image: File | null;
+}
+
+export interface ProductTypeMutation {
+  _id: string;
+  categoryId: string;
+  name: string;
+  desc?: string;
+  unit: string;
+  vendorCode: number;
+  group: string;
+  cod: string;
+  dimensions: string;
+  weight: string;
+  images?: File[];
   price: number;
 }
 

@@ -26,6 +26,7 @@ import BasketPage from './components/UI/Basket/BasketPage';
 import Order from './features/Order/Order';
 import AboutPage from './components/UI/AboutPage/AboutPage';
 import ContactsPage from './components/UI/СontactsPage/СontactsPage';
+import ProductEdit from './features/Products/components/ProductEdit';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -101,6 +102,7 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/edit-product/:id" element={<ProductEdit />} />
         <Route path="*" element={<NoFoundPage />} />
       </Route>
     </Routes>

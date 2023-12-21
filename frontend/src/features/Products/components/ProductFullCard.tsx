@@ -6,6 +6,7 @@ import { ProductBasketType, ProductType } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectProductBasket, setProductBasket } from '../productsSlise';
 import { apiURL } from '../../../constants';
+import { useNavigate } from 'react-router-dom';
 
 interface Props {
   product: ProductType;
@@ -16,6 +17,7 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
 
   const dispatch = useAppDispatch();
   const basketMarker = useAppSelector(selectProductBasket);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -39,8 +41,8 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
   };
 
   let imgProduct = noImage;
-  if (product.image) {
-    imgProduct = apiURL + product.image;
+  if (product.images.length) {
+    imgProduct = apiURL + product.images[0];
   }
 
   return (
@@ -85,6 +87,7 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
             </Tooltip>
           </Box>
         </Grid>
+        <Button onClick={() => navigate('/edit-product/' + product._id)}>Изменить</Button>
       </Grid>
     </Paper>
   );

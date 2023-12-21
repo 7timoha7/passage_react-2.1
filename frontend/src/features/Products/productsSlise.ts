@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { ProductType } from '../../types';
+import { GlobalSuccess, ProductType, ValidationError } from '../../types';
 import { RootState } from '../../app/store';
-import { getFavoriteProducts, productFetch, productsFetch, productsFromApi } from './productsThunks';
+import { editProduct, getFavoriteProducts, productFetch, productsFetch, productsFromApi } from './productsThunks';
 
 interface ProductsState {
   products: ProductType[];
@@ -13,6 +13,9 @@ interface ProductsState {
   error: boolean;
   favoriteProducts: ProductType[];
   fetchFavoriteProductsLoading: boolean;
+  productError: ValidationError | null;
+  loadingProductEdit: boolean;
+  ProductSuccess: GlobalSuccess | null;
 }
 
 const initialState: ProductsState = {
@@ -25,6 +28,9 @@ const initialState: ProductsState = {
   error: false,
   favoriteProducts: [],
   fetchFavoriteProductsLoading: false,
+  productError: null,
+  loadingProductEdit: false,
+  ProductSuccess: null,
 };
 
 export const productsSLice = createSlice({
@@ -82,6 +88,19 @@ export const productsSLice = createSlice({
     builder.addCase(getFavoriteProducts.rejected, (state) => {
       state.fetchFavoriteProductsLoading = false;
     });
+
+    builder.addCase(editProduct.pending, (state) => {
+      state.loadingProductEdit = true;
+      state.productError = null;
+    });
+    builder.addCase(editProduct.fulfilled, (state, { payload: success }) => {
+      state.loadingProductEdit = false;
+      state.ProductSuccess = success;
+    });
+    builder.addCase(editProduct.rejected, (state, { payload: error }) => {
+      state.loadingProductEdit = false;
+      state.productError = error || null;
+    });
   },
 });
 
@@ -92,8 +111,11 @@ export const { setProductBasket } = productsSLice.actions;
 export const selectProductsState = (state: RootState) => state.products.products;
 export const selectProductOne = (state: RootState) => state.products.product;
 export const selectProductBasket = (state: RootState) => state.products.productBasket;
-export const selectProductsFromApi = (state: RootState) => state.products.productsFromApi;
-export const selectProductsLoading = (state: RootState) => state.products.productsLoading;
-export const selectProductLoading = (state: RootState) => state.products.productLoading;
 export const selectFavoriteProducts = (state: RootState) => state.products.favoriteProducts;
 export const selectFetchFavoriteProductsLoading = (state: RootState) => state.products.fetchFavoriteProductsLoading;
+export const selectProductsFromApi = (state: RootState) => state.products.productsFromApi;
+export const selectProductLoading = (state: RootState) => state.products.productLoading;
+export const selectProductsLoading = (state: RootState) => state.products.productsLoading;
+export const selectLoadingEditProduct = (state: RootState) => state.products.loadingProductEdit;
+export const selectProductError = (state: RootState) => state.products.productError;
+export const selectProductSuccess = (state: RootState) => state.products.ProductSuccess;
