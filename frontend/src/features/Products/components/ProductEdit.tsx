@@ -7,7 +7,6 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectLoadingEditProduct, selectProductError, selectProductLoading, selectProductOne } from '../productsSlise';
 import { useNavigate, useParams } from 'react-router-dom';
 import { editProduct, productFetch, removeProductImage } from '../productsThunks';
-import Resizer from 'react-image-file-resizer';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import FileInput from '../../../components/UI/FileInput/FileInput';
 import { apiURL } from '../../../constants';
@@ -70,31 +69,31 @@ const ProductEdit = () => {
     setState((prev) => ({ ...prev, [name]: value }));
   };
 
-  const resizeFile = (file: File) =>
-    new Promise((resolve) => {
-      Resizer.imageFileResizer(
-        file,
-        1920,
-        1080,
-        'jpg',
-        80,
-        0,
-        (uri) => {
-          resolve(uri);
-        },
-        'file',
-      );
-    });
+  // const resizeFile = (file: File) =>
+  //   new Promise((resolve) => {
+  //     Resizer.imageFileResizer(
+  //       file,
+  //       1920,
+  //       1080,
+  //       'jpg',
+  //       80,
+  //       0,
+  //       (uri) => {
+  //         resolve(uri);
+  //       },
+  //       'file',
+  //     );
+  //   });
 
   const fileInputChangeHandler = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, files } = e.target;
 
     if (files) {
-      const image = await resizeFile(files[0]);
+      // const image = await resizeFile(files[0]);
 
       setStateImg((prev) => ({
         ...prev,
-        [name]: image,
+        [name]: files[0],
       }));
     }
   };
@@ -172,7 +171,6 @@ const ProductEdit = () => {
                   />
                 </Grid>
               </Card>
-
               <Card sx={{ mt: 5, p: 3 }}>
                 <Grid item xs>
                   <FileInput
@@ -184,9 +182,9 @@ const ProductEdit = () => {
                   />
                   <Grid container justifyContent={'end'} mt={3}>
                     <Grid item>
-                      <IconButton onClick={onClickAdd}>
-                        <DownloadSharpIcon fontSize="large" sx={{ color: 'rgba(17,92,23,0.87)' }} />
-                        <Typography color={'rgba(17,92,23,0.87)'}>{'Загрузить'}</Typography>
+                      <IconButton onClick={onClickAdd} disabled={!stateImg.image} color={'success'}>
+                        <DownloadSharpIcon fontSize="large" />
+                        <Typography>{'Загрузить'}</Typography>
                       </IconButton>
                     </Grid>
                     <Grid container direction="column">

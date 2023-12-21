@@ -27,6 +27,7 @@ import Order from './features/Order/Order';
 import AboutPage from './components/UI/AboutPage/AboutPage';
 import ContactsPage from './components/UI/СontactsPage/СontactsPage';
 import ProductEdit from './features/Products/components/ProductEdit';
+import { use } from 'i18next';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -102,7 +103,14 @@ function App() {
             </ProtectedRoute>
           }
         />
-        <Route path="/edit-product/:id" element={<ProductEdit />} />
+        <Route
+          path="/edit-product/:id"
+          element={
+            <ProtectedRoute isAllowed={user && Boolean(user.role === 'admin' || user.role === 'director')}>
+              <ProductEdit />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NoFoundPage />} />
       </Route>
     </Routes>

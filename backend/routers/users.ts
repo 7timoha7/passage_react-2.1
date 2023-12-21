@@ -124,33 +124,20 @@ usersRouter.patch('/status/:id', auth, permit('director', 'admin'), async (req, 
   }
 });
 
-// usersRouter.patch('/role/:id', auth, permit('director', 'admin'), async (req, res, next) => {
-//   try {
-//     const currentUser = await User.findById(req.params.id);
-//     if (currentUser) {
-//       if (currentUser.role === 'hotel') {
-//         const hotels = await Hotel.find({ userId: currentUser._id });
-//         await Hotel.deleteMany({ userId: currentUser._id });
-//
-//         const hotelIds = hotels.map((hotel) => hotel._id);
-//         await Apartment.deleteMany({ hotelId: { $in: hotelIds } });
-//
-//         currentUser.role = 'user';
-//         await currentUser.save();
-//
-//         res.send({ message: 'Role changed, and all hotels and apartments deleted' });
-//       } else {
-//         await User.updateOne({ _id: req.params.id }, { $set: { role: req.body.role } });
-//         res.send({ message: 'Role changed' });
-//       }
-//     } else {
-//       res.send(400).send({ message: 'User is not found' });
-//     }
-//   } catch (e) {
-//     return next(e);
-//   }
-// });
-//
+usersRouter.patch('/role/:id', auth, permit('director', 'admin'), async (req, res, next) => {
+  try {
+    const currentUser = await User.findById(req.params.id);
+    if (currentUser) {
+      await User.updateOne({ _id: req.params.id }, { $set: { role: req.body.role } });
+      res.send({ message: 'Role changed' });
+    } else {
+      res.send(400).send({ message: 'User is not found' });
+    }
+  } catch (e) {
+    return next(e);
+  }
+});
+
 usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user'), async (req, res, next) => {
   const user = (req as RequestWithUser).user;
   const addProductId = req.body.addProduct;

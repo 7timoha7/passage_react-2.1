@@ -7,6 +7,7 @@ import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectProductBasket, setProductBasket } from '../productsSlise';
 import { apiURL } from '../../../constants';
 import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../../users/usersSlice';
 
 interface Props {
   product: ProductType;
@@ -14,7 +15,8 @@ interface Props {
 
 const ProductFullCard: React.FC<Props> = ({ product }) => {
   const [isAddedToCart, setIsAddedToCart] = useState(false);
-
+  const [selectedImage, setSelectedImage] = useState(product.images.length ? product.images[0] : '');
+  const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const basketMarker = useAppSelector(selectProductBasket);
   const navigate = useNavigate();
@@ -40,16 +42,29 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
     setIsAddedToCart(true);
   };
 
-  let imgProduct = noImage;
-  if (product.images.length) {
-    imgProduct = apiURL + product.images[0];
-  }
-
   return (
     <Paper elevation={3} sx={{ maxWidth: '600px', margin: 'auto' }}>
       <Grid container>
         <Grid item xs={12} md={6}>
-          <img src={imgProduct} alt={product.name} style={{ width: '100%', height: 'auto' }} />
+          <img
+            src={product.images.length ? apiURL + '/' + selectedImage : noImage}
+            alt={product.name}
+            style={{ width: '100%', height: 'auto' }}
+          />
+          <Grid container spacing={1} mt={2}>
+            {product.images.length
+              ? product.images.map((image, index) => (
+                  <Grid item key={index}>
+                    <img
+                      src={apiURL + '/' + image}
+                      alt={product.name}
+                      style={{ width: '50px', height: 'auto', cursor: 'pointer', border: '1px solid #ccc' }}
+                      onClick={() => setSelectedImage(image)}
+                    />
+                  </Grid>
+                ))
+              : null}
+          </Grid>
         </Grid>
         <Grid item xs={12} md={6}>
           <Box
@@ -87,7 +102,9 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
             </Tooltip>
           </Box>
         </Grid>
-        <Button onClick={() => navigate('/edit-product/' + product._id)}>Изменить</Button>
+        {user?.role === 'admin' || user?.role === 'director' ? (
+          <Button onClick={() => navigate('/edit-product/' + product._id)}>Изменить</Button>
+        ) : null}
       </Grid>
     </Paper>
   );

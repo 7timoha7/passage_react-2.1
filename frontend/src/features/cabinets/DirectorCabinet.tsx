@@ -6,18 +6,11 @@ import { Box, Card, CardContent, Grid, List, Typography } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
-import Collapse from '@mui/material/Collapse';
-import AssignmentIndIcon from '@mui/icons-material/AssignmentInd';
-import ExpandLess from '@mui/icons-material/ExpandLess';
-import ExpandMore from '@mui/icons-material/ExpandMore';
-import PeopleAltIcon from '@mui/icons-material/PeopleAlt';
 import PersonIcon from '@mui/icons-material/Person';
-import LocationCityIcon from '@mui/icons-material/LocationCity';
 import GroupIcon from '@mui/icons-material/Group';
-import { CabinetState, User } from '../../types';
+import { CabinetState } from '../../types';
 import UserItems from '../users/components/UserItems';
 import WcIcon from '@mui/icons-material/Wc';
-import ManageAccountsOutlinedIcon from '@mui/icons-material/ManageAccountsOutlined';
 import MyInformation from './components/MyInformation';
 import { someStyle } from '../../styles';
 
@@ -38,7 +31,6 @@ interface Props {
 const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectGetUsersByRoleLoading);
-  const usersByRole = useAppSelector(selectUsersByRole);
   const gotUsers = useAppSelector(selectUsersByRole);
 
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
@@ -57,17 +49,10 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
     }
   }, [dispatch, state.reportAdmins, state.simpleUsers, state.admins, state.serviceProviders]);
 
-  const handleClickAdminName = (user: User) => {
-    setAdminName(user.firstName + ' ' + user.lastName);
-  };
-
   const options = [
     { option: 'myInfo', icon: <PersonIcon />, text: 'myInfo' },
-    { option: 'openUsers', icon: <AssignmentIndIcon />, text: 'usersStatus' },
-    { option: 'openHotels', icon: <LocationCityIcon />, text: 'hotelStatus' },
     { option: 'simpleUsers', icon: <GroupIcon />, text: 'users' },
     { option: 'admins', icon: <WcIcon />, text: 'admins' },
-    { option: 'serviceProviders', icon: <ManageAccountsOutlinedIcon />, text: 'serviceProviders' },
   ];
 
   const handleClickOption = (option: string, index: number) => {
@@ -114,41 +99,12 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
                     <ListItemText style={selectedIndex === index ? { color: '#03C988' } : {}} primary={option.text} />
                   </ListItemButton>
                 ))}
-                <ListItemButton
-                  key={options.length}
-                  selected={selectedIndex === options.length}
-                  onClick={() => handleClickOption('reportAdmins', options.length)}
-                >
-                  <ListItemIcon style={state.reportAdmins ? { color: '#03C988' } : {}}>
-                    <PeopleAltIcon />
-                  </ListItemIcon>
-                  <ListItemText style={state.reportAdmins ? { color: '#03C988' } : {}} primary={'adminsReports'} />
-                  {state.reportAdmins ? <ExpandLess /> : <ExpandMore />}
-                </ListItemButton>
-                <Collapse in={state.reportAdmins} timeout="auto" unmountOnExit>
-                  {usersByRole.map((user) => (
-                    <List key={user._id} component="div" disablePadding>
-                      <ListItemButton
-                        sx={{
-                          pl: 4,
-                        }}
-                        onClick={() => handleClickAdminName(user)}
-                      >
-                        <ListItemIcon>
-                          <PersonIcon />
-                        </ListItemIcon>
-                        <ListItemText primary={user.firstName + ' ' + user.lastName} />
-                      </ListItemButton>
-                    </List>
-                  ))}
-                </Collapse>
               </List>
             </Grid>
             <Grid item xs>
               {state.myInfo && <MyInformation />}
               {state.simpleUsers && <UserItems prop={gotUsers} role="user" />}
               {state.admins && <UserItems prop={gotUsers} role="admin" />}
-              {state.serviceProviders && <UserItems prop={gotUsers} role="hotel" />}
             </Grid>
           </Grid>
         </CardContent>

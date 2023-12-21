@@ -1,10 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { Typography } from '@mui/material';
+import { Button, Typography } from '@mui/material';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import { User } from '../../../types';
+import { useAppDispatch, useAppSelector } from '../../../app/hooks';
+import { selectUser } from '../usersSlice';
+import Dialog from '@mui/material/Dialog';
+import DialogContent from '@mui/material/DialogContent';
+import DialogActions from '@mui/material/DialogActions';
+import { LoadingButton } from '@mui/lab';
+import { changeRole, getByRole } from '../usersThunks';
 
 interface Props {
   prop: User;
@@ -12,6 +19,42 @@ interface Props {
 }
 
 const UserItem: React.FC<Props> = ({ prop, role }) => {
+  const dispatch = useAppDispatch();
+  const user = useAppSelector(selectUser);
+
+  const [state] = useState({
+    id: prop._id,
+    role: role === 'hotel' ? 'user' : role === 'user' ? 'hotel' : 'hotel',
+  });
+
+  const [open, setOpen] = useState(false);
+
+  const handleClick = () => {
+    setOpen(true);
+  };
+
+  const handleYes = async () => {
+    if (user?.role === 'admin') {
+      await dispatch(changeRole(state));
+      await dispatch(getByRole(role));
+      await setOpen(false);
+    } else {
+      if (role === 'admin' || role === 'user') {
+        await dispatch(
+          changeRole({
+            ...state,
+            role: role === 'admin' ? 'user' : role === 'user' ? 'admin' : 'admin',
+          }),
+        );
+        await dispatch(getByRole(role));
+        await setOpen(false);
+      } else {
+        await dispatch(changeRole(state));
+        await dispatch(getByRole(role));
+        await setOpen(false);
+      }
+    }
+  };
   return (
     <Accordion
       sx={{
@@ -49,7 +92,30 @@ const UserItem: React.FC<Props> = ({ prop, role }) => {
           {' '}
           {'Роль' + ': '} {prop.role}
         </Typography>
+        {user?.role === 'director' && (
+          <LoadingButton color="success" onClick={handleClick}>
+            {'Изменить роль'}
+          </LoadingButton>
+        )}
       </AccordionDetails>
+      <Dialog open={open} onClose={() => setOpen(false)}>
+        <>
+          <DialogContent>
+            <Typography variant="body1">
+              <>
+                {role === 'user' &&
+                  `Вы уверены, что хотите ${prop.firstName.toUpperCase()} ${prop.lastName.toUpperCase()} сделать админом?`}
+                {role === 'admin' &&
+                  `Вы уверены, что хотите забрать у ${prop.firstName.toUpperCase()} ${prop.lastName.toUpperCase()} возможность быть админом?`}
+              </>
+            </Typography>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)}>отмена</Button>
+            <Button onClick={handleYes}>да</Button>
+          </DialogActions>
+        </>
+      </Dialog>
     </Accordion>
   );
 };
