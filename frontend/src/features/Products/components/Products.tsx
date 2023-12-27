@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { Grid } from '@mui/material';
 import Typography from '@mui/material/Typography';
-import { BasketTypeOnServerMutation, CategoriesType, ProductType } from '../../../types';
+import { CategoriesType, ProductType } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { selectProductsState } from '../productsSlise';
 import { productsFetch } from '../productsThunks';

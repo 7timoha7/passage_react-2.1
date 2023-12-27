@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { BasketTypeOnServerMutation, ProductType } from '../../../types';
+import { ProductType } from '../../../types';
 import { selectFavoriteProducts, selectFetchFavoriteProductsLoading } from '../../Products/productsSlise';
 import { getFavoriteProducts } from '../../Products/productsThunks';
 import { selectBasket } from '../../Basket/basketSlice';

@@ -12,8 +12,6 @@ import { someStyle } from '../../styles';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { getFavoriteProducts } from '../Products/productsThunks';
 import { selectFavoriteProducts, selectFetchFavoriteProductsLoading } from '../Products/productsSlise';
-import ProductCard from '../Products/components/ProductCard';
-import Spinner from '../../components/UI/Spinner/Spinner';
 import Favorites from './components/Favorites';
 
 const initialState: CabinetState = {
@@ -28,10 +26,7 @@ interface Props {
 
 const UserCabinet: React.FC<Props> = ({ exist = initialState }) => {
   const dispatch = useAppDispatch();
-
   const [state, setState] = React.useState<CabinetState>(exist);
-  const favoriteProducts = useAppSelector(selectFavoriteProducts);
-  const favoriteProductsLoading = useAppSelector(selectFetchFavoriteProductsLoading);
 
   useEffect(() => {
     if (state.favorites) {
@@ -87,7 +82,6 @@ const UserCabinet: React.FC<Props> = ({ exist = initialState }) => {
           </Grid>
           <Grid item xs>
             {state.myInfo && <MyInformation />}
-
             {state.favorites && <Favorites />}
           </Grid>
         </Grid>
