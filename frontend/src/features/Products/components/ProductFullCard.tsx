@@ -2,44 +2,48 @@ import React, { useEffect, useState } from 'react';
 import { Box, Paper, Typography, Tooltip, Button, Grid } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import noImage from '../../../assets/images/no_image.jpg';
-import { ProductBasketType, ProductType } from '../../../types';
+import { BasketTypeOnServerMutation, ProductBasketType, ProductType } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectProductBasket, setProductBasket } from '../productsSlise';
 import { apiURL } from '../../../constants';
 import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
+import { selectBasket } from '../../Basket/basketSlice';
+import { fetchBasket, updateBasket } from '../../Basket/basketThunks';
 
 interface Props {
   product: ProductType;
 }
 
 const ProductFullCard: React.FC<Props> = ({ product }) => {
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
   const [selectedImage, setSelectedImage] = useState(product.images.length ? product.images[0] : '');
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
-  const basketMarker = useAppSelector(selectProductBasket);
   const navigate = useNavigate();
+  const basket = useAppSelector(selectBasket);
 
   useEffect(() => {
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const isProductAlreadyAdded = currentCart.some((item: ProductType) => item._id === product._id);
+    dispatch(fetchBasket('1'));
+  }, [dispatch]);
 
-    setIsAddedToCart(isProductAlreadyAdded);
-  }, [basketMarker, product._id]);
-
-  const handleAddToCart = () => {
-    dispatch(setProductBasket());
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const updatedCart = currentCart.map((item: ProductBasketType) =>
-      item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item,
-    );
-    const existingProduct = updatedCart.find((item: ProductType) => item._id === product._id);
-    if (!existingProduct) {
-      updatedCart.push({ ...product, quantity: 1 });
+  const indicator = (item: ProductType) => {
+    if (basket && item) {
+      return basket.items.some((itemBasket) => itemBasket.product._id === item._id);
+    } else {
+      return false;
     }
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    setIsAddedToCart(true);
+  };
+
+  const handleAddToCart = async () => {
+    if (basket?.session_key) {
+      await dispatch(
+        updateBasket({
+          sessionKey: basket.session_key,
+          product_id: product._id,
+          action: 'increase',
+        }),
+      );
+      await dispatch(fetchBasket(basket.session_key));
+    }
   };
 
   return (
@@ -87,19 +91,28 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
                 Цена: {product.price} сом
               </Typography>
             </div>
-            <Tooltip title={isAddedToCart ? 'Товар уже в корзине' : 'Добавить в корзину'} arrow>
-              <div>
-                <Button
-                  onClick={handleAddToCart}
-                  disabled={isAddedToCart}
-                  variant="outlined"
-                  endIcon={<AddShoppingCartIcon />}
-                  color={'error'}
-                >
-                  {isAddedToCart ? 'В корзине' : 'Добавить в корзину'}
+            <Grid container spacing={2}>
+              <Grid item>
+                <Tooltip title={indicator(product) ? 'Товар уже в корзине' : 'Добавить в корзину'} arrow>
+                  <div>
+                    <Button
+                      onClick={handleAddToCart}
+                      disabled={indicator(product)}
+                      variant="outlined"
+                      endIcon={<AddShoppingCartIcon />}
+                      color={'error'}
+                    >
+                      {indicator(product) ? 'В корзине' : 'Добавить в корзину'}
+                    </Button>
+                  </div>
+                </Tooltip>
+              </Grid>
+              <Grid item>
+                <Button onClick={() => navigate('/basket')} variant="outlined" color="error">
+                  Перейти в корзину
                 </Button>
-              </div>
-            </Tooltip>
+              </Grid>
+            </Grid>
           </Box>
         </Grid>
         {user?.role === 'admin' || user?.role === 'director' ? (

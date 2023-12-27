@@ -49,11 +49,6 @@ export interface GlobalSuccess {
   };
 }
 
-export interface MenuType {
-  name: string;
-  value: boolean;
-}
-
 export interface CategoriesType {
   _id: string;
   name: string;
@@ -99,4 +94,32 @@ export interface ProductBasketType extends ProductType {
 
 export interface CabinetState {
   [key: string]: boolean;
+}
+
+export interface BasketTypeToServer {
+  user_id?: string;
+  session_key?: string;
+  items: {
+    product: string;
+    quantity: number;
+  }[];
+  totalPrice: number;
+}
+
+export interface BasketTypeOnServerMutation {
+  _id: string;
+  user_id?: string;
+  session_key?: string;
+  items: {
+    _id: string;
+    product: ProductType;
+    quantity: number;
+  }[];
+  totalPrice: number;
+}
+
+interface BasketUpdateRequest {
+  sessionKey?: string;
+  product_id?: string;
+  action: 'increase' | 'decrease' | 'remove' | 'clear';
 }

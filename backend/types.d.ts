@@ -46,3 +46,15 @@ export interface IProductFromApi {
   type: number;
   vat: string;
 }
+
+export interface IBasket {
+  user_id?: ObjectId;
+  session_key?: string;
+  created_at: Date;
+  updated_at: Date;
+  items: {
+    product: ObjectId;
+    quantity: number;
+  }[];
+  totalPrice: number;
+}

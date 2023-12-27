@@ -5,6 +5,7 @@ import storage from 'redux-persist/lib/storage';
 import { usersReducer } from '../features/users/usersSlice';
 import { categoriesReducer } from '../features/MenuCategories/menuCategoriesSlice';
 import { productsReducer } from '../features/Products/productsSlise';
+import { basketReducer } from '../features/Basket/basketSlice';
 
 const usersPersistConfig = {
   key: 'passage:users',
@@ -16,6 +17,7 @@ const rootReducer = combineReducers({
   users: persistReducer(usersPersistConfig, usersReducer),
   categories: persistReducer(usersPersistConfig, categoriesReducer),
   products: persistReducer(usersPersistConfig, productsReducer),
+  basket: persistReducer(usersPersistConfig, basketReducer),
 });
 
 export const store = configureStore({

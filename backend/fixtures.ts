@@ -14,6 +14,7 @@ const run = async () => {
     await db.dropCollection('users');
     await db.dropCollection('categories');
     await db.dropCollection('products');
+    await db.dropCollection('baskets');
   } catch (e) {
     console.log('Collections were not present, skipping drop...');
   }

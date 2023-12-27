@@ -19,7 +19,7 @@ const initialState: CategoriesState = {
   fetchOneCategoriesLoading: false,
 };
 
-export const hotelsSlice = createSlice({
+export const categoriesSlice = createSlice({
   name: 'categories',
   initialState,
   reducers: {},
@@ -47,7 +47,7 @@ export const hotelsSlice = createSlice({
     });
   },
 });
-export const categoriesReducer = hotelsSlice.reducer;
+export const categoriesReducer = categoriesSlice.reducer;
 
 export const selectFetchAllCategoriesLoading = (state: RootState) => state.categories.fetchAllCategoriesLoading;
 export const selectFetchOneCategoriesLoading = (state: RootState) => state.categories.fetchOneCategoriesLoading;

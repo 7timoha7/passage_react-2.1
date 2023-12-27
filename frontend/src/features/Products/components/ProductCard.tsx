@@ -1,63 +1,46 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Card from '@mui/material/Card';
 import CardMedia from '@mui/material/CardMedia';
 import CardContent from '@mui/material/CardContent';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import Tooltip from '@mui/material/Tooltip';
-import { ProductBasketType, ProductType } from '../../../types';
+import { ProductType } from '../../../types';
 import noImage from '../../../assets/images/no_image.jpg';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectProductBasket, setProductBasket } from '../productsSlise';
 import { apiURL } from '../../../constants';
 import { selectUser } from '../../users/usersSlice';
 import { changeFavorites, reAuthorization } from '../../users/usersThunks';
 import { getFavoriteProducts } from '../productsThunks';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { fetchBasket, updateBasket } from '../../Basket/basketThunks';
 
 interface Props {
   product: ProductType;
+  indicator?: boolean;
 }
 
-const ProductCard: React.FC<Props> = ({ product }) => {
-  const [isAddedToCart, setIsAddedToCart] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
-
+const ProductCard: React.FC<Props> = ({ product, indicator }) => {
   const dispatch = useAppDispatch();
-  const basketMarker = useAppSelector(selectProductBasket);
   const navigate = useNavigate();
   const user = useAppSelector(selectUser);
+  const sessionKey = localStorage.getItem('sessionKey');
 
-  let imgProduct = noImage;
-  if (product.images.length) {
-    imgProduct = apiURL + product.images[0];
-  }
-
-  useEffect(() => {
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const isProductAlreadyAdded = currentCart.some((item: ProductType) => item._id === product._id);
-
-    setIsAddedToCart(isProductAlreadyAdded);
-  }, [basketMarker, product._id]);
-
-  const handleAddToCart = () => {
-    dispatch(setProductBasket());
-    const currentCart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const updatedCart = currentCart.map((item: ProductBasketType) =>
-      item._id === product._id ? { ...item, quantity: item.quantity + 1 } : item,
-    );
-    const existingProduct = updatedCart.find((item: ProductType) => item._id === product._id);
-    if (!existingProduct) {
-      updatedCart.push({ ...product, quantity: 1 });
+  const handleAddToCart = async () => {
+    if (sessionKey) {
+      await dispatch(
+        updateBasket({
+          sessionKey: sessionKey,
+          product_id: product._id,
+          action: 'increase',
+        }),
+      );
+      await dispatch(fetchBasket(sessionKey));
     }
-    localStorage.setItem('cart', JSON.stringify(updatedCart));
-    setIsAddedToCart(true);
   };
-
-  const favorite = user?.role === 'user' && user.favorites.includes(product._id);
 
   const onClickFavorite = async (id: string) => {
     if (!favorite) {
@@ -70,6 +53,13 @@ const ProductCard: React.FC<Props> = ({ product }) => {
     }
   };
 
+  const favorite = user?.role === 'user' && user.favorites.includes(product._id);
+
+  let imgProduct = noImage;
+  if (product.images.length) {
+    imgProduct = apiURL + product.images[0];
+  }
+
   return (
     <Box>
       <Card
@@ -78,10 +68,10 @@ const ProductCard: React.FC<Props> = ({ product }) => {
           width: 345,
           display: 'flex',
           flexDirection: 'column',
-          position: 'relative', // Добавлен стиль, чтобы позволить позиционирование иконки "Добавить в избранное"
+          position: 'relative',
           transition: 'box-shadow 0.3s',
           '&:hover': {
-            boxShadow: isAddedToCart ? 'none' : '0px 0px 10px 2px rgba(255,0,0,0.75)',
+            boxShadow: indicator ? 'none' : '0px 0px 10px 2px rgba(255,0,0,0.75)',
           },
         }}
       >
@@ -92,7 +82,7 @@ const ProductCard: React.FC<Props> = ({ product }) => {
             top: 0,
             right: 0,
             cursor: 'pointer',
-            padding: '8px', // Подберите подходящий вам отступ
+            padding: '8px',
           }}
           onClick={(e) => {
             e.stopPropagation();
@@ -121,23 +111,21 @@ const ProductCard: React.FC<Props> = ({ product }) => {
               alignSelf: 'flex-end',
             }}
           >
-            <Tooltip title={isAddedToCart ? 'Товар уже в корзине' : 'Добавить в корзину'} arrow>
+            <Tooltip title={indicator ? 'Товар уже в корзине' : 'Добавить в корзину'} arrow>
               <div
                 onClick={(e) => {
                   e.stopPropagation();
-                  if (!isAddedToCart) {
+                  if (!indicator) {
                     handleAddToCart();
                   }
                 }}
-                onMouseEnter={() => setIsHovered(true)}
-                onMouseLeave={() => setIsHovered(false)}
                 style={{
-                  cursor: isAddedToCart ? 'not-allowed' : 'pointer',
+                  cursor: indicator ? 'not-allowed' : 'pointer',
                 }}
               >
                 <AddShoppingCartIcon
                   fontSize="large"
-                  color={isAddedToCart ? 'disabled' : isHovered ? 'error' : 'inherit'}
+                  color={indicator ? 'disabled' : indicator ? 'error' : 'inherit'}
                 />
               </div>
             </Tooltip>

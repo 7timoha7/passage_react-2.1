@@ -9,13 +9,12 @@ interface ProductsState {
   productsFromApi: ProductType[];
   productsLoading: boolean;
   productLoading: boolean;
-  productBasket: boolean;
   error: boolean;
   favoriteProducts: ProductType[];
   fetchFavoriteProductsLoading: boolean;
   productError: ValidationError | null;
   loadingProductEdit: boolean;
-  ProductSuccess: GlobalSuccess | null;
+  productSuccess: GlobalSuccess | null;
 }
 
 const initialState: ProductsState = {
@@ -24,21 +23,20 @@ const initialState: ProductsState = {
   productsFromApi: [],
   productsLoading: false,
   productLoading: false,
-  productBasket: false,
   error: false,
   favoriteProducts: [],
   fetchFavoriteProductsLoading: false,
   productError: null,
   loadingProductEdit: false,
-  ProductSuccess: null,
+  productSuccess: null,
 };
 
 export const productsSLice = createSlice({
   name: 'products',
   initialState,
   reducers: {
-    setProductBasket: (state) => {
-      state.productBasket = !state.productBasket;
+    setProductSuccessNull: (state) => {
+      state.productSuccess = null;
     },
   },
   extraReducers: (builder) => {
@@ -95,7 +93,7 @@ export const productsSLice = createSlice({
     });
     builder.addCase(editProduct.fulfilled, (state, { payload: success }) => {
       state.loadingProductEdit = false;
-      state.ProductSuccess = success;
+      state.productSuccess = success;
     });
     builder.addCase(editProduct.rejected, (state, { payload: error }) => {
       state.loadingProductEdit = false;
@@ -106,11 +104,10 @@ export const productsSLice = createSlice({
 
 export const productsReducer = productsSLice.reducer;
 
-export const { setProductBasket } = productsSLice.actions;
+export const { setProductSuccessNull } = productsSLice.actions;
 
 export const selectProductsState = (state: RootState) => state.products.products;
 export const selectProductOne = (state: RootState) => state.products.product;
-export const selectProductBasket = (state: RootState) => state.products.productBasket;
 export const selectFavoriteProducts = (state: RootState) => state.products.favoriteProducts;
 export const selectFetchFavoriteProductsLoading = (state: RootState) => state.products.fetchFavoriteProductsLoading;
 export const selectProductsFromApi = (state: RootState) => state.products.productsFromApi;
@@ -118,4 +115,4 @@ export const selectProductLoading = (state: RootState) => state.products.product
 export const selectProductsLoading = (state: RootState) => state.products.productsLoading;
 export const selectLoadingEditProduct = (state: RootState) => state.products.loadingProductEdit;
 export const selectProductError = (state: RootState) => state.products.productError;
-export const selectProductSuccess = (state: RootState) => state.products.ProductSuccess;
+export const selectProductSuccess = (state: RootState) => state.products.productSuccess;

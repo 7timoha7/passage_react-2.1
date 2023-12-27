@@ -14,51 +14,37 @@ import {
 } from '@mui/material';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { useEffect, useState } from 'react';
-import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectProductBasket, setProductBasket } from '../../../features/Products/productsSlise';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { BasketTypeOnServerMutation } from '../../types';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { selectBasket } from './basketSlice';
+import { fetchBasket, updateBasket } from './basketThunks';
+import { useNavigate } from 'react-router-dom';
 
 const BasketPage = () => {
-  const [cartItems, setCartItems] = useState<{ _id: string; name: string; quantity: number; price: number }[]>([]);
+  const [stateBasket, setStateBasket] = useState<BasketTypeOnServerMutation | null>(null);
+  const basket = useAppSelector(selectBasket);
   const dispatch = useAppDispatch();
-  const basketMarker = useAppSelector(selectProductBasket);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const savedCart = localStorage.getItem('cart');
-    if (savedCart) {
-      const parsedCart = JSON.parse(savedCart);
-      const nonZeroQuantityCart = parsedCart.filter((item: { _id: string; quantity: number }) => item.quantity > 0);
-      setCartItems(nonZeroQuantityCart);
-      if (nonZeroQuantityCart.length > 0) {
-        localStorage.setItem('cart', JSON.stringify(nonZeroQuantityCart));
-      } else {
-        localStorage.removeItem('cart');
-      }
-    } else {
-      setCartItems([]);
+    if (basket) {
+      setStateBasket(basket);
     }
-  }, [basketMarker]);
+  }, [basket]);
 
-  const updateCartItemQuantity = (_id: string, quantity: number) => {
-    dispatch(setProductBasket());
-    const updatedCart = cartItems
-      .map((item) => (_id === item._id ? { ...item, quantity } : item))
-      .filter((item) => item.quantity > 0);
-
-    setCartItems(updatedCart);
-
-    if (updatedCart.length > 0) {
-      localStorage.setItem('cart', JSON.stringify(updatedCart));
-    } else {
-      localStorage.removeItem('cart');
+  const handleUpdateBasket = async (product_id: string, action: 'increase' | 'decrease' | 'remove') => {
+    if (stateBasket?.session_key) {
+      await dispatch(updateBasket({ sessionKey: stateBasket.session_key, product_id, action }));
+      await dispatch(fetchBasket(stateBasket.session_key));
     }
   };
 
-  const clearCart = () => {
-    dispatch(setProductBasket());
-    setCartItems([]);
-    localStorage.removeItem('cart');
+  const clearBasket = async (action: 'clear') => {
+    if (stateBasket?.session_key) {
+      await dispatch(updateBasket({ action: action, sessionKey: stateBasket.session_key, product_id: action }));
+      await dispatch(fetchBasket(stateBasket.session_key));
+    }
   };
 
   return (
@@ -66,7 +52,7 @@ const BasketPage = () => {
       <Typography variant="h4" gutterBottom textAlign={'center'}>
         Корзина
       </Typography>
-      {cartItems.length > 0 ? (
+      {stateBasket?.items ? (
         <>
           <TableContainer component={Paper} sx={{ marginBottom: 2 }}>
             <Table>
@@ -79,22 +65,26 @@ const BasketPage = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {cartItems.map((item) => (
+                {stateBasket.items.map((item) => (
                   <TableRow key={item._id}>
-                    <TableCell>{item.name}</TableCell>
+                    <TableCell>{item.product.name}</TableCell>
                     <TableCell align="center">{item.quantity}</TableCell>
                     <TableCell align="center">
-                      <IconButton color="primary" onClick={() => updateCartItemQuantity(item._id, item.quantity + 1)}>
+                      <IconButton color="primary" onClick={() => handleUpdateBasket(item.product._id, 'increase')}>
                         <AddCircleOutlineIcon style={{ color: 'red' }} />
                       </IconButton>
                       <IconButton
                         color="primary"
-                        onClick={() => updateCartItemQuantity(item._id, Math.max(0, item.quantity - 1))}
+                        onClick={() =>
+                          item.quantity === 1
+                            ? handleUpdateBasket(item.product._id, 'remove')
+                            : handleUpdateBasket(item.product._id, 'decrease')
+                        }
                       >
                         <RemoveCircleOutlineIcon style={{ color: 'black' }} />
                       </IconButton>
                     </TableCell>
-                    <TableCell align="center">{`${item.price * item.quantity} сом`}</TableCell>
+                    <TableCell align="center">{`${item.product.price * item.quantity} сом`}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -102,16 +92,16 @@ const BasketPage = () => {
           </TableContainer>
           <Divider sx={{ marginY: 2 }} />
           <Typography variant="h5" gutterBottom>
-            Общая сумма: {cartItems.reduce((acc, item) => acc + item.price * item.quantity, 0)} сом
+            Общая сумма: {stateBasket.totalPrice} сом
           </Typography>
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
-              <Button variant="contained" color="error" sx={{ marginLeft: 2 }}>
+              <Button onClick={() => navigate('/order')} variant="contained" color="error" sx={{ marginLeft: 2 }}>
                 Оформить заказ
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="outlined" color="error" onClick={clearCart}>
+              <Button variant="outlined" color="error" onClick={() => clearBasket('clear')}>
                 Очистить корзину
               </Button>
             </Grid>

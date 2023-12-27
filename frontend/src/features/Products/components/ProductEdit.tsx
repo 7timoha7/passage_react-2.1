@@ -41,6 +41,10 @@ const ProductEdit = () => {
   const oneProduct = useAppSelector(selectProductOne);
   const loadingEditProduct = useAppSelector(selectLoadingEditProduct);
 
+  const goBack = () => {
+    window.history.back();
+  };
+
   useEffect(() => {
     dispatch(productFetch(id));
   }, [dispatch, id]);
@@ -219,10 +223,23 @@ const ProductEdit = () => {
                   </Grid>
                 </Grid>
               </Card>
-              <Grid item xs>
-                <LoadingButton type="submit" color="success" variant="contained" loading={loadingEditProduct}>
-                  {'Изменить'}
-                </LoadingButton>
+              <Grid container justifyContent="space-between" sx={{ mt: 2 }}>
+                <Grid item>
+                  <LoadingButton type="submit" color="success" variant="contained" loading={loadingEditProduct}>
+                    Изменить
+                  </LoadingButton>
+                </Grid>
+                <Grid item>
+                  <LoadingButton
+                    onClick={goBack}
+                    type="button"
+                    color="warning"
+                    variant="contained"
+                    loading={loadingEditProduct}
+                  >
+                    Назад
+                  </LoadingButton>
+                </Grid>
               </Grid>
             </Grid>
           </Box>

@@ -14,6 +14,7 @@ import { getFavoriteProducts } from '../Products/productsThunks';
 import { selectFavoriteProducts, selectFetchFavoriteProductsLoading } from '../Products/productsSlise';
 import ProductCard from '../Products/components/ProductCard';
 import Spinner from '../../components/UI/Spinner/Spinner';
+import Favorites from './components/Favorites';
 
 const initialState: CabinetState = {
   orders: false,
@@ -36,9 +37,6 @@ const UserCabinet: React.FC<Props> = ({ exist = initialState }) => {
     if (state.favorites) {
       dispatch(getFavoriteProducts());
     }
-    // if (state.orders) {
-    //   dispatch(getOrders());
-    // }
   }, [dispatch, state.favorites, state.orders]);
 
   const handleClickOrders = () => {
@@ -89,18 +87,8 @@ const UserCabinet: React.FC<Props> = ({ exist = initialState }) => {
           </Grid>
           <Grid item xs>
             {state.myInfo && <MyInformation />}
-            {/*{state.orders && <OrderItems ordersItems={orders} />}*/}
-            {/*{loading && <Spinner />}*/}
-            {favoriteProductsLoading && <Spinner />}
-            {state.favorites && (
-              <Grid container spacing={3}>
-                {favoriteProducts.map((product) => (
-                  <Grid item xs={12} sm={12} md={6} lg={6} xl={6} key={product._id}>
-                    <ProductCard product={product} />
-                  </Grid>
-                ))}
-              </Grid>
-            )}
+
+            {state.favorites && <Favorites />}
           </Grid>
         </Grid>
       </CardContent>
