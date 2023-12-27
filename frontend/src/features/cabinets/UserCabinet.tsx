@@ -9,9 +9,8 @@ import HomeIcon from '@mui/icons-material/Home';
 import MyInformation from './components/MyInformation';
 import { CabinetState } from '../../types';
 import { someStyle } from '../../styles';
-import { useAppDispatch, useAppSelector } from '../../app/hooks';
+import { useAppDispatch } from '../../app/hooks';
 import { getFavoriteProducts } from '../Products/productsThunks';
-import { selectFavoriteProducts, selectFetchFavoriteProductsLoading } from '../Products/productsSlise';
 import Favorites from './components/Favorites';
 
 const initialState: CabinetState = {
