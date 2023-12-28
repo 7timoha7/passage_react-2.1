@@ -1,5 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { GlobalSuccess, ProductType, ValidationError } from '../../types';
+import { GlobalSuccess, PageInfo, ProductType, ValidationError } from '../../types';
 import { RootState } from '../../app/store';
 import { editProduct, getFavoriteProducts, productFetch, productsFetch, productsFromApi } from './productsThunks';
 
@@ -15,6 +15,7 @@ interface ProductsState {
   productError: ValidationError | null;
   loadingProductEdit: boolean;
   productSuccess: GlobalSuccess | null;
+  pageInfo: PageInfo | null;
 }
 
 const initialState: ProductsState = {
@@ -29,6 +30,7 @@ const initialState: ProductsState = {
   productError: null,
   loadingProductEdit: false,
   productSuccess: null,
+  pageInfo: null,
 };
 
 export const productsSLice = createSlice({
@@ -44,7 +46,8 @@ export const productsSLice = createSlice({
       state.productsLoading = true;
     });
     builder.addCase(productsFetch.fulfilled, (state, action) => {
-      state.products = action.payload;
+      state.products = action.payload.products;
+      state.pageInfo = action.payload.pageInfo;
       state.productsLoading = false;
     });
     builder.addCase(productsFetch.rejected, (state) => {
@@ -116,3 +119,4 @@ export const selectProductsLoading = (state: RootState) => state.products.produc
 export const selectLoadingEditProduct = (state: RootState) => state.products.loadingProductEdit;
 export const selectProductError = (state: RootState) => state.products.productError;
 export const selectProductSuccess = (state: RootState) => state.products.productSuccess;
+export const selectPageInfo = (state: RootState) => state.products.pageInfo;

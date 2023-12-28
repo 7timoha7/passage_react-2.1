@@ -35,15 +35,48 @@ productRouter.post('/', async (req, res, next) => {
   }
 });
 
+// productRouter.get('/', async (req, res) => {
+//   try {
+//     if (req.query.category) {
+//       const productCategory = await Product.find({ categoryId: req.query.category });
+//       return res.send(productCategory);
+//     }
+//     const products = await Product.find();
+//     return res.send(products);
+//   } catch {
+//     return res.sendStatus(500);
+//   }
+// });
+
 productRouter.get('/', async (req, res) => {
   try {
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    const pageSize = 2;
+
+    let query = {};
+
     if (req.query.category) {
-      const productCategory = await Product.find({ categoryId: req.query.category });
-      return res.send(productCategory);
+      query = { categoryId: req.query.category };
     }
-    const products = await Product.find();
-    return res.send(products);
-  } catch {
+
+    const totalProducts = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProducts / pageSize);
+
+    const products = await Product.find(query)
+      .skip((page - 1) * pageSize)
+      .limit(pageSize);
+
+    return res.send({
+      products,
+      pageInfo: {
+        currentPage: page,
+        totalPages,
+        pageSize,
+        totalItems: totalProducts,
+      },
+    });
+  } catch (error) {
+    console.error(error);
     return res.sendStatus(500);
   }
 });

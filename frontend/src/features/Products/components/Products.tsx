@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import Typography from '@mui/material/Typography';
+import Pagination from '@mui/material/Pagination';
 import { BasketTypeOnServerMutation, CategoriesType, ProductType } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
-import { selectProductsState } from '../productsSlise';
-import { productsFetch } from '../productsThunks';
 import ProductCard from './ProductCard';
 import { selectBasket } from '../../Basket/basketSlice';
+import { productsFetch } from '../productsThunks';
+import { selectPageInfo, selectProductsState } from '../productsSlise';
 
 interface Props {
   categoryName: CategoriesType | null;
@@ -20,6 +21,7 @@ const Products: React.FC<Props> = ({ categoryName }) => {
   const { id } = useParams();
   const productsInCategory = useAppSelector(selectProductsState);
   const basket = useAppSelector(selectBasket);
+  const pageInfo = useAppSelector(selectPageInfo);
 
   useEffect(() => {
     if (basket) {
@@ -29,7 +31,7 @@ const Products: React.FC<Props> = ({ categoryName }) => {
 
   useEffect(() => {
     if (id) {
-      dispatch(productsFetch(id));
+      dispatch(productsFetch({ id, page: 1 }));
     }
     if (categoryName) {
       setName(categoryName.name);
@@ -44,21 +46,46 @@ const Products: React.FC<Props> = ({ categoryName }) => {
     }
   };
 
+  const handlePageChange = (event: React.ChangeEvent<unknown>, page: number) => {
+    dispatch(productsFetch({ id: id || '', page }));
+  };
+
+  const renderPagination = () => {
+    if (pageInfo && pageInfo.totalPages > 1) {
+      return (
+        <Box display="flex" justifyContent="center" mt={2}>
+          <Pagination
+            showFirstButton
+            showLastButton
+            count={pageInfo.totalPages}
+            page={pageInfo.currentPage}
+            onChange={handlePageChange}
+            variant="outlined"
+          />
+        </Box>
+      );
+    }
+    return null;
+  };
+
   return (
-    <>
-      <Typography variant={'h2'} textAlign={'center'}>
-        {name}
-      </Typography>
+    <Box>
+      <Box textAlign="center" mb={2}>
+        <Typography variant={'h2'}>{name}</Typography>
+      </Box>
+
+      {renderPagination()}
+
       <Grid container spacing={4} mt={2} mb={2}>
-        {productsInCategory.map((item) => {
-          return (
-            <Grid item key={item._id}>
-              <ProductCard product={item} indicator={indicator(item)} />
-            </Grid>
-          );
-        })}
+        {productsInCategory.map((item) => (
+          <Grid item key={item._id}>
+            <ProductCard product={item} indicator={indicator(item)} />
+          </Grid>
+        ))}
       </Grid>
-    </>
+
+      {renderPagination()}
+    </Box>
   );
 };
 

@@ -123,3 +123,10 @@ interface BasketUpdateRequest {
   product_id?: string;
   action: 'increase' | 'decrease' | 'remove' | 'clear';
 }
+
+interface PageInfo {
+  currentPage: number;
+  totalPages: number;
+  pageSize: number;
+  totalItems: number;
+}

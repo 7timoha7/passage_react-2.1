@@ -1,12 +1,21 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GlobalSuccess, ProductType, ProductTypeMutation, ValidationError } from '../../types';
+import { GlobalSuccess, PageInfo, ProductType, ProductTypeMutation, ValidationError } from '../../types';
 import axiosApi from '../../axiosApi';
 import { RootState } from '../../app/store';
 import { isAxiosError } from 'axios';
 
-export const productsFetch = createAsyncThunk<ProductType[], string>('products/fetch', async (id) => {
-  const products = await axiosApi.get('/products?category=' + id);
-  return products.data;
+// export const productsFetch = createAsyncThunk<ProductType[], string>('products/fetch', async (id) => {
+//   const products = await axiosApi.get('/products?category=' + id);
+//   return products.data;
+// });
+
+export const productsFetch = createAsyncThunk<
+  { products: ProductType[]; pageInfo: PageInfo },
+  { id: string; page: number }
+>('products/fetch', async ({ id, page }) => {
+  const pageSize = 30; // Установите желаемый размер страницы
+  const response = await axiosApi.get(`/products?category=${id}&page=${page}&pageSize=${pageSize}`);
+  return response.data;
 });
 
 export const productFetch = createAsyncThunk<ProductType, string>('products/fetchOne', async (id) => {
