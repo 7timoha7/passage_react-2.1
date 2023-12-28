@@ -44,6 +44,12 @@ const Basket = () => {
     setStateBasket(basket);
   }, [basket]);
 
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchBasket('1'));
+    }
+  }, [dispatch, user]);
+
   const handleUpdateBasket = async (product_id: string, action: 'increase' | 'decrease' | 'remove') => {
     if (user) {
       await dispatch(updateBasket({ sessionKey: user._id, product_id, action }));
@@ -58,6 +64,10 @@ const Basket = () => {
     if (stateBasket?.session_key) {
       await dispatch(updateBasket({ action: action, sessionKey: stateBasket.session_key, product_id: action }));
       await dispatch(fetchBasket(stateBasket.session_key));
+      setAnchorEl(null);
+    } else if (user) {
+      await dispatch(updateBasket({ action: action, sessionKey: user._id, product_id: action }));
+      await dispatch(fetchBasket(user._id));
       setAnchorEl(null);
     }
   };
@@ -120,7 +130,12 @@ const Basket = () => {
                 </Button>
               </Grid>
               <Grid item>
-                <Button onClick={() => clearBasket('clear')} variant="text" color="error">
+                <Button
+                  disabled={stateBasket?.items.length === 0}
+                  onClick={() => clearBasket('clear')}
+                  variant="text"
+                  color="error"
+                >
                   Очистить корзину
                 </Button>
               </Grid>

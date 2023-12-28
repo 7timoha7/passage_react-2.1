@@ -27,7 +27,7 @@ export const basketSlice = createSlice({
   name: 'basket',
   initialState,
   reducers: {
-    setApartmentsSuccessNull: (state) => {
+    setBasketSuccessNull: (state) => {
       state.basketSuccess = null;
     },
   },
@@ -76,7 +76,7 @@ export const basketSlice = createSlice({
 });
 export const basketReducer = basketSlice.reducer;
 
-export const { setApartmentsSuccessNull } = basketSlice.actions;
+export const { setBasketSuccessNull } = basketSlice.actions;
 
 export const selectBasket = (state: RootState) => state.basket.basket;
 export const selectBasketCreateLoading = (state: RootState) => state.basket.basketCreateLoading;

@@ -20,12 +20,14 @@ import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { selectBasket } from './basketSlice';
 import { fetchBasket, updateBasket } from './basketThunks';
 import { useNavigate } from 'react-router-dom';
+import { selectUser } from '../users/usersSlice';
 
 const BasketPage = () => {
   const [stateBasket, setStateBasket] = useState<BasketTypeOnServerMutation | null>(null);
   const basket = useAppSelector(selectBasket);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
+  const user = useAppSelector(selectUser);
 
   useEffect(() => {
     if (basket) {
@@ -33,8 +35,17 @@ const BasketPage = () => {
     }
   }, [basket]);
 
+  useEffect(() => {
+    if (user) {
+      dispatch(fetchBasket('1'));
+    }
+  }, [dispatch, user]);
+
   const handleUpdateBasket = async (product_id: string, action: 'increase' | 'decrease' | 'remove') => {
-    if (stateBasket?.session_key) {
+    if (user) {
+      await dispatch(updateBasket({ sessionKey: user._id, product_id, action }));
+      await dispatch(fetchBasket(user._id));
+    } else if (stateBasket?.session_key) {
       await dispatch(updateBasket({ sessionKey: stateBasket.session_key, product_id, action }));
       await dispatch(fetchBasket(stateBasket.session_key));
     }
@@ -44,6 +55,9 @@ const BasketPage = () => {
     if (stateBasket?.session_key) {
       await dispatch(updateBasket({ action: action, sessionKey: stateBasket.session_key, product_id: action }));
       await dispatch(fetchBasket(stateBasket.session_key));
+    } else if (user) {
+      await dispatch(updateBasket({ action: action, sessionKey: user._id, product_id: action }));
+      await dispatch(fetchBasket(user._id));
     }
   };
 
@@ -96,12 +110,23 @@ const BasketPage = () => {
           </Typography>
           <Grid container spacing={2} justifyContent="flex-end">
             <Grid item>
-              <Button onClick={() => navigate('/order')} variant="contained" color="error" sx={{ marginLeft: 2 }}>
+              <Button
+                disabled={stateBasket?.items.length === 0}
+                onClick={() => navigate('/order')}
+                variant="contained"
+                color="error"
+                sx={{ marginLeft: 2 }}
+              >
                 Оформить заказ
               </Button>
             </Grid>
             <Grid item>
-              <Button variant="outlined" color="error" onClick={() => clearBasket('clear')}>
+              <Button
+                disabled={stateBasket?.items.length === 0}
+                variant="outlined"
+                color="error"
+                onClick={() => clearBasket('clear')}
+              >
                 Очистить корзину
               </Button>
             </Grid>

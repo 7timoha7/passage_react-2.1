@@ -14,7 +14,6 @@ export const createBasket = createAsyncThunk<
   BasketTypeOnServerMutation,
   {
     sessionKey?: string;
-    basket?: BasketTypeToServer;
   },
   {
     state: RootState;

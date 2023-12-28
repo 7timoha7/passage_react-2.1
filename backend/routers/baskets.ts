@@ -37,7 +37,7 @@ basketRouter.post('/', async (req, res, next) => {
 basketRouter.post('/user', auth, async (req, res, next) => {
   try {
     const user = (req as RequestWithUser).user;
-    const sessionKeyBasket = req.body.sessionKey;
+    // const sessionKeyBasket = req.body.sessionKey;
     if (user) {
       const basketUser = await Basket.findOne({ user_id: user });
       if (basketUser) {
@@ -45,7 +45,7 @@ basketRouter.post('/user', auth, async (req, res, next) => {
       } else {
         const newBasket = new Basket({
           user_id: user._id,
-          session_key: sessionKeyBasket,
+          // session_key: sessionKeyBasket,
           created_at: new Date(),
           updated_at: new Date(),
         });

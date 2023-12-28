@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Grid, Paper, Tooltip, Typography } from '@mui/material';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import noImage from '../../../assets/images/no_image.jpg';
-import { ProductType } from '../../../types';
+import { BasketTypeOnServerMutation, ProductType } from '../../../types';
 import { useAppDispatch, useAppSelector } from '../../../app/hooks';
 import { apiURL } from '../../../constants';
 import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
 import { selectBasket } from '../../Basket/basketSlice';
 import { fetchBasket, updateBasket } from '../../Basket/basketThunks';
+import { use } from 'i18next';
 
 interface Props {
   product: ProductType;
@@ -16,18 +17,30 @@ interface Props {
 
 const ProductFullCard: React.FC<Props> = ({ product }) => {
   const [selectedImage, setSelectedImage] = useState(product.images.length ? product.images[0] : '');
+  const [stateBasket, setStateBasket] = useState<BasketTypeOnServerMutation | null>(null);
   const user = useAppSelector(selectUser);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const basket = useAppSelector(selectBasket);
+  const storedBasketId = localStorage.getItem('sessionKey');
 
   useEffect(() => {
-    dispatch(fetchBasket('1'));
-  }, [dispatch]);
+    if (storedBasketId) {
+      dispatch(fetchBasket(storedBasketId));
+    } else if (user) {
+      dispatch(fetchBasket('1'));
+    }
+  }, [dispatch, storedBasketId, user]);
+
+  useEffect(() => {
+    if (basket) {
+      setStateBasket(basket);
+    }
+  }, [basket]);
 
   const indicator = (item: ProductType) => {
-    if (basket && item) {
-      return basket.items.some((itemBasket) => itemBasket.product._id === item._id);
+    if (stateBasket && item) {
+      return stateBasket.items.some((itemBasket) => itemBasket.product._id === item._id);
     } else {
       return false;
     }
@@ -43,6 +56,15 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
         }),
       );
       await dispatch(fetchBasket(basket.session_key));
+    } else if (user) {
+      await dispatch(
+        updateBasket({
+          sessionKey: '1',
+          product_id: product._id,
+          action: 'increase',
+        }),
+      );
+      await dispatch(fetchBasket('1'));
     }
   };
 

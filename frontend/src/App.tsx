@@ -25,14 +25,23 @@ import AboutPage from './components/UI/AboutPage/AboutPage';
 import ContactsPage from './components/UI/СontactsPage/СontactsPage';
 import ProductEdit from './features/Products/components/ProductEdit';
 import { selectProductSuccess, setProductSuccessNull } from './features/Products/productsSlise';
+import { selectBasketSuccess, setBasketSuccessNull } from './features/Basket/basketSlice';
 
 function App() {
   const user = useAppSelector(selectUser);
   const userSuccess = useAppSelector(selectUserSuccess);
   const productSuccess = useAppSelector(selectProductSuccess);
+  const basketSuccess = useAppSelector(selectBasketSuccess);
   const dispatch = useAppDispatch();
   const { enqueueSnackbar } = useSnackbar();
   const { i18n } = useTranslation();
+
+  useEffect(() => {
+    if (basketSuccess) {
+      enqueueSnackbar(basketSuccess.message.ru, { variant: 'success', preventDuplicate: true });
+    }
+    dispatch(setBasketSuccessNull());
+  }, [basketSuccess, dispatch, enqueueSnackbar]);
 
   useEffect(() => {
     if (userSuccess) {
