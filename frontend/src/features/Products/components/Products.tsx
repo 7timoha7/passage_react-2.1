@@ -33,9 +33,6 @@ const Products: React.FC<Props> = ({ categoryName }) => {
   useEffect(() => {
     if (id) {
       dispatch(productsFetch(id));
-      if (user) {
-        dispatch(fetchBasket('1'));
-      }
     }
     if (categoryName) {
       setName(categoryName.name);

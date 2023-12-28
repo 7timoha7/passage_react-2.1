@@ -9,7 +9,6 @@ import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
 import { selectBasket } from '../../Basket/basketSlice';
 import { fetchBasket, updateBasket } from '../../Basket/basketThunks';
-import { use } from 'i18next';
 
 interface Props {
   product: ProductType;

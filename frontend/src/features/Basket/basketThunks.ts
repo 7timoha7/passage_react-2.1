@@ -1,13 +1,7 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import axiosApi from '../../axiosApi';
 import { isAxiosError } from 'axios';
-import {
-  BasketTypeOnServerMutation,
-  BasketTypeToServer,
-  BasketUpdateRequest,
-  GlobalSuccess,
-  ValidationError,
-} from '../../types';
+import { BasketTypeOnServerMutation, BasketUpdateRequest, GlobalSuccess, ValidationError } from '../../types';
 import { RootState } from '../../app/store';
 
 export const createBasket = createAsyncThunk<
