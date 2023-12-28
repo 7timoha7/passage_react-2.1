@@ -77,7 +77,7 @@ productRouter.get('/:id', async (req, res, next) => {
   }
 });
 
-productRouter.get('/get/favorites', auth, permit('user'), async (req, res, next) => {
+productRouter.get('/get/favorites', auth, async (req, res, next) => {
   try {
     const user = (req as RequestWithUser).user;
     const favoriteProductsId = user.favorites;

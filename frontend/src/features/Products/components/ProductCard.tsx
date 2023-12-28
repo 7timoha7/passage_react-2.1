@@ -53,7 +53,9 @@ const ProductCard: React.FC<Props> = ({ product, indicator }) => {
     }
   };
 
-  const favorite = user?.role === 'user' && user.favorites.includes(product._id);
+  const favorite =
+    (user?.role === 'user' || user?.role === 'director' || user?.role === 'admin') &&
+    user.favorites.includes(product._id);
 
   let imgProduct = noImage;
   if (product.images.length) {
@@ -91,7 +93,7 @@ const ProductCard: React.FC<Props> = ({ product, indicator }) => {
         >
           {user &&
             user.isVerified &&
-            user.role === 'user' &&
+            (user.role === 'user' || user.role === 'director' || user.role === 'admin') &&
             (favorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />)}
         </Box>
         <CardContent

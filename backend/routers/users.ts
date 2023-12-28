@@ -138,7 +138,7 @@ usersRouter.patch('/role/:id', auth, permit('director', 'admin'), async (req, re
   }
 });
 
-usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user'), async (req, res, next) => {
+usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user', 'admin', 'director'), async (req, res, next) => {
   const user = (req as RequestWithUser).user;
   const addProductId = req.body.addProduct;
   const deleteProductId = req.body.deleteProduct;

@@ -1,27 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { getByRole } from '../users/usersThunks';
-import { selectGetUsersByRoleLoading, selectUsersByRole, unsetCabinetUsers } from '../users/usersSlice';
+import { selectGetUsersByRoleLoading, selectUsersByRole } from '../users/usersSlice';
 import { Box, Card, CardContent, Grid, List, Typography } from '@mui/material';
 import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonIcon from '@mui/icons-material/Person';
+
+import { useTranslation } from 'react-i18next';
 import GroupIcon from '@mui/icons-material/Group';
 import { CabinetState } from '../../types';
 import UserItems from '../users/components/UserItems';
 import WcIcon from '@mui/icons-material/Wc';
 import MyInformation from './components/MyInformation';
 import { someStyle } from '../../styles';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import Favorites from './components/Favorites';
 
 const initialState: CabinetState = {
   myInfo: true,
-  openUsers: false,
-  openHotels: false,
   simpleUsers: false,
   admins: false,
-  reportAdmins: false,
-  serviceProviders: false,
+  favorites: false,
 };
 
 interface Props {
@@ -32,48 +33,34 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectGetUsersByRoleLoading);
   const gotUsers = useAppSelector(selectUsersByRole);
+  const { t } = useTranslation();
 
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const [state, setState] = React.useState<CabinetState>(exist);
-  const [adminName, setAdminName] = useState('');
 
   useEffect(() => {
-    if (state.reportAdmins) {
-      dispatch(getByRole('admin'));
-    } else if (state.simpleUsers) {
+    if (state.simpleUsers) {
       dispatch(getByRole('user'));
     } else if (state.admins) {
       dispatch(getByRole('admin'));
-    } else if (state.serviceProviders) {
-      dispatch(getByRole('hotel'));
     }
-  }, [dispatch, state.reportAdmins, state.simpleUsers, state.admins, state.serviceProviders]);
+  }, [dispatch, state.simpleUsers, state.admins]);
 
   const options = [
-    { option: 'myInfo', icon: <PersonIcon />, text: 'myInfo' },
-    { option: 'simpleUsers', icon: <GroupIcon />, text: 'users' },
-    { option: 'admins', icon: <WcIcon />, text: 'admins' },
+    { option: 'myInfo', icon: <PersonIcon />, text: t('myInfo') },
+    { option: 'simpleUsers', icon: <GroupIcon />, text: t('users') },
+    { option: 'admins', icon: <WcIcon />, text: t('admins') },
+    { option: 'favorites', icon: <FavoriteIcon />, text: 'favorites' },
   ];
 
   const handleClickOption = (option: string, index: number) => {
-    setState((prev) => ({
-      ...Object.fromEntries(Object.keys(prev).map((key) => [key, false])),
-      [option]: !state[option],
-    }));
-    setAdminName('');
+    setState((prev) => ({ ...Object.fromEntries(Object.keys(prev).map((key) => [key, false])), [option]: true }));
     setSelectedIndex(index);
-    dispatch(unsetCabinetUsers());
   };
 
   return (
     <Box mt={3}>
       {loading && <Typography>loading...</Typography>}
-      {state.reportAdmins && (
-        <Typography variant="h6" fontWeight="bolder" textAlign="center" sx={{ color: 'grey', textAlign: 'right' }}>
-          {adminName}
-        </Typography>
-      )}
-
       <Card sx={{ minHeight: '600px' }}>
         <CardContent>
           <Grid container flexDirection="row" spacing={2} alignItems="self-start">
@@ -105,6 +92,7 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
               {state.myInfo && <MyInformation />}
               {state.simpleUsers && <UserItems prop={gotUsers} role="user" />}
               {state.admins && <UserItems prop={gotUsers} role="admin" />}
+              {state.favorites && <Favorites />}
             </Grid>
           </Grid>
         </CardContent>

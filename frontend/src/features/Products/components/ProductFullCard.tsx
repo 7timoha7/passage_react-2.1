@@ -9,6 +9,10 @@ import { useNavigate } from 'react-router-dom';
 import { selectUser } from '../../users/usersSlice';
 import { selectBasket } from '../../Basket/basketSlice';
 import { fetchBasket, updateBasket } from '../../Basket/basketThunks';
+import FavoriteIcon from '@mui/icons-material/Favorite';
+import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
+import { changeFavorites, reAuthorization } from '../../users/usersThunks';
+import { getFavoriteProducts } from '../productsThunks';
 
 interface Props {
   product: ProductType;
@@ -67,8 +71,41 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
     }
   };
 
+  const onClickFavorite = async (id: string) => {
+    if (!favorite) {
+      await dispatch(changeFavorites({ addProduct: id }));
+      await dispatch(reAuthorization());
+    } else {
+      await dispatch(changeFavorites({ deleteProduct: id }));
+      await dispatch(reAuthorization());
+      await dispatch(getFavoriteProducts());
+    }
+  };
+
+  const favorite =
+    (user?.role === 'user' || user?.role === 'director' || user?.role === 'admin') &&
+    user.favorites.includes(product._id);
+
   return (
-    <Paper elevation={3} sx={{ maxWidth: '600px', margin: 'auto' }}>
+    <Paper elevation={3} sx={{ maxWidth: '600px', margin: 'auto', position: 'relative' }}>
+      <Box
+        sx={{
+          position: 'absolute',
+          top: 0,
+          right: 0,
+          cursor: 'pointer',
+          padding: '8px',
+        }}
+        onClick={(e) => {
+          e.stopPropagation();
+          onClickFavorite(product._id);
+        }}
+      >
+        {user &&
+          user.isVerified &&
+          (user.role === 'user' || user.role === 'director' || user.role === 'admin') &&
+          (favorite ? <FavoriteIcon color="error" /> : <FavoriteBorderIcon />)}
+      </Box>
       <Grid container>
         <Grid item xs={12} md={6}>
           <img

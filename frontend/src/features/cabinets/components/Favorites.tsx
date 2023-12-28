@@ -33,19 +33,19 @@ const Favorites = () => {
       <Typography variant={'h5'} textAlign={'center'}>
         Любимые товары
       </Typography>
-      <Grid container spacing={4} mt={1} mb={2}>
-        {favoriteProductsLoading ? (
-          <Spinner />
-        ) : (
-          favoriteProducts.map((item) => {
+      {favoriteProductsLoading ? (
+        <Spinner />
+      ) : (
+        <Grid container spacing={4} mt={1} mb={2}>
+          {favoriteProducts.map((item) => {
             return (
               <Grid item key={item._id}>
                 <ProductCard product={item} indicator={indicator(item)} />
               </Grid>
             );
-          })
-        )}
-      </Grid>
+          })}
+        </Grid>
+      )}
     </>
   );
 };

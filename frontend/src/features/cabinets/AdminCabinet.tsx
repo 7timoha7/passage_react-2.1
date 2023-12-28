@@ -12,11 +12,14 @@ import GroupIcon from '@mui/icons-material/Group';
 import { getByRole } from '../users/usersThunks';
 import UserItems from '../users/components/UserItems';
 import { someStyle } from '../../styles';
+import Favorites from './components/Favorites';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const initialState: CabinetState = {
   myInfo: true,
   myOrders: false,
   users: false,
+  favorites: false,
 };
 
 interface Props {
@@ -46,6 +49,7 @@ const AdminCabinet: React.FC<Props> = ({ exist = initialState }) => {
   const options = [
     { option: 'myInfo', icon: <PersonIcon />, text: 'myInfo' },
     { option: 'users', icon: <GroupIcon />, text: 'users' },
+    { option: 'favorites', icon: <FavoriteIcon />, text: 'favorites' },
   ];
 
   return (
@@ -80,6 +84,7 @@ const AdminCabinet: React.FC<Props> = ({ exist = initialState }) => {
             <Grid item xs>
               {state.myInfo && <MyInformation />}
               {state.users && <UserItems prop={gotUsers} role="user" />}
+              {state.favorites && <Favorites />}
             </Grid>
           </Grid>
         </CardContent>
