@@ -14,7 +14,6 @@ const drawerWidth = 240;
 
 const MenuCategories = () => {
   const [mobileOpen, setMobileOpen] = React.useState(false);
-  // const categoriesMass = ['Сантехника', 'Керамогранит', 'Ламинат', 'Посуда', 'Ковролин'];
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
   };
@@ -104,7 +103,15 @@ const MenuCategories = () => {
           display: { lg: 'none' },
         }}
       >
-        <IconButton color="inherit" aria-label="open drawer" edge="start" onClick={handleDrawerToggle} sx={{ mr: 2 }}>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          edge="start"
+          onClick={handleDrawerToggle}
+          sx={{
+            borderRadius: 0,
+          }}
+        >
           <MenuIcon fontSize={'large'} />
           <Typography variant={'h6'} textAlign={'center'} sx={{ ml: 1 }}>
             Каталог товаров

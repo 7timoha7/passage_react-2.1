@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Grid, Box } from '@mui/material';
+import { Box, Grid, Stack } from '@mui/material';
 import Typography from '@mui/material/Typography';
 import Pagination from '@mui/material/Pagination';
 import { BasketTypeOnServerMutation, CategoriesType, ProductType } from '../../../types';
@@ -53,15 +53,19 @@ const Products: React.FC<Props> = ({ categoryName }) => {
   const renderPagination = () => {
     if (pageInfo && pageInfo.totalPages > 1) {
       return (
-        <Box display="flex" justifyContent="center" mt={2}>
-          <Pagination
-            showFirstButton
-            showLastButton
-            count={pageInfo.totalPages}
-            page={pageInfo.currentPage}
-            onChange={handlePageChange}
-            variant="outlined"
-          />
+        <Box display="flex" justifyContent="center">
+          <Stack spacing={2}>
+            <Pagination
+              showFirstButton
+              showLastButton
+              count={pageInfo.totalPages}
+              page={pageInfo.currentPage}
+              onChange={handlePageChange}
+              variant="outlined"
+              shape="rounded"
+              size={'small'}
+            />
+          </Stack>
         </Box>
       );
     }

@@ -4,11 +4,6 @@ import axiosApi from '../../axiosApi';
 import { RootState } from '../../app/store';
 import { isAxiosError } from 'axios';
 
-// export const productsFetch = createAsyncThunk<ProductType[], string>('products/fetch', async (id) => {
-//   const products = await axiosApi.get('/products?category=' + id);
-//   return products.data;
-// });
-
 export const productsFetch = createAsyncThunk<
   { products: ProductType[]; pageInfo: PageInfo },
   { id: string; page: number }

@@ -35,23 +35,10 @@ productRouter.post('/', async (req, res, next) => {
   }
 });
 
-// productRouter.get('/', async (req, res) => {
-//   try {
-//     if (req.query.category) {
-//       const productCategory = await Product.find({ categoryId: req.query.category });
-//       return res.send(productCategory);
-//     }
-//     const products = await Product.find();
-//     return res.send(products);
-//   } catch {
-//     return res.sendStatus(500);
-//   }
-// });
-
 productRouter.get('/', async (req, res) => {
   try {
     const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
-    const pageSize = 2;
+    const pageSize = 20;
 
     let query = {};
 
