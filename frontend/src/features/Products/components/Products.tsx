@@ -8,7 +8,6 @@ import { selectProductsState } from '../productsSlise';
 import { productsFetch } from '../productsThunks';
 import ProductCard from './ProductCard';
 import { selectBasket } from '../../Basket/basketSlice';
-import { fetchBasket } from '../../Basket/basketThunks';
 import { selectUser } from '../../users/usersSlice';
 
 interface Props {
@@ -22,7 +21,6 @@ const Products: React.FC<Props> = ({ categoryName }) => {
   const { id } = useParams();
   const productsInCategory = useAppSelector(selectProductsState);
   const basket = useAppSelector(selectBasket);
-  const user = useAppSelector(selectUser);
 
   useEffect(() => {
     if (basket) {
