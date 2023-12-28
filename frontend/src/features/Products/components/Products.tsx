@@ -8,7 +8,6 @@ import { selectProductsState } from '../productsSlise';
 import { productsFetch } from '../productsThunks';
 import ProductCard from './ProductCard';
 import { selectBasket } from '../../Basket/basketSlice';
-import { selectUser } from '../../users/usersSlice';
 
 interface Props {
   categoryName: CategoriesType | null;
