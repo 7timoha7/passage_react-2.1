@@ -7,8 +7,6 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import PersonIcon from '@mui/icons-material/Person';
-
-import { useTranslation } from 'react-i18next';
 import GroupIcon from '@mui/icons-material/Group';
 import { CabinetState } from '../../types';
 import UserItems from '../users/components/UserItems';

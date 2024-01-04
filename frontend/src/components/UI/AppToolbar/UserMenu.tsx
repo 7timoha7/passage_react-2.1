@@ -47,10 +47,12 @@ const UserMenu: React.FC<Props> = ({ user }) => {
         keepMounted
         open={Boolean(anchorEl)}
         onClose={handleClose}
-        PaperProps={{
-          sx: {
-            borderRadius: '8px', // Пример: закругленные углы
-            background: 'linear-gradient(45deg, rgb(172, 172, 172), rgb(252, 140, 140))',
+        slotProps={{
+          paper: {
+            sx: {
+              borderRadius: '8px',
+              background: 'linear-gradient(45deg, rgb(172, 172, 172), rgb(252, 140, 140))',
+            },
           },
         }}
       >
