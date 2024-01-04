@@ -34,7 +34,7 @@ const GooglePhoneNumber = () => {
           <ModalCover state={open}>
             <Card sx={{ p: 2, mb: 2 }}>
               <Typography sx={{ display: 'inline-block', mb: 2 }} variant="body1" textAlign="center">
-                {'googlePhoneText'}
+                {'Для входа в личный кабинет , вам необходимо ввести номер телефона.'}
               </Typography>
               <form onSubmit={handleSubmit}>
                 <Box>
@@ -50,7 +50,7 @@ const GooglePhoneNumber = () => {
                   />
                 </Box>
                 <Button variant="contained" type="submit" sx={{ mt: 3 }} disabled={phoneNumber.length < 8}>
-                  {'submit'}
+                  {'Подтвердить'}
                 </Button>
               </form>
             </Card>
@@ -61,7 +61,7 @@ const GooglePhoneNumber = () => {
               style={{ margin: '10px auto', display: 'block', background: '#03C988' }}
               onClick={goBack}
             >
-              {'back'}
+              {'Назад'}
             </Button>
           </ModalCover>
         </>

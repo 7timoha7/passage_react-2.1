@@ -46,7 +46,14 @@ const AccordionCategories: React.FC<Props> = ({ categories, close }) => {
               <Typography>{item.name}</Typography>
             </AccordionSummary>
             <AccordionDetails>
-              <Button onClick={() => navigateAndClose(item._id)}>{item.name}</Button>
+              <Button
+                variant={'text'}
+                color={'inherit'}
+                sx={{ width: '100%' }}
+                onClick={() => navigateAndClose(item._id)}
+              >
+                {item.name}
+              </Button>
             </AccordionDetails>
           </Accordion>
         );

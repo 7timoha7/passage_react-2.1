@@ -63,19 +63,19 @@ const UserCabinet: React.FC<Props> = ({ exist = initialState }) => {
                 <ListItemIcon>
                   <HomeIcon style={state.myInfo ? { color: '#822020' } : {}} />
                 </ListItemIcon>
-                <ListItemText style={state.myInfo ? { color: '#822020' } : {}} primary={'myInfo'} />
+                <ListItemText style={state.myInfo ? { color: '#822020' } : {}} primary={'Моя информация'} />
               </ListItemButton>
               <ListItemButton onClick={handleClickOrders}>
                 <ListItemIcon>
                   <MapsHomeWorkIcon style={state.orders ? { color: '#822020' } : {}} />
                 </ListItemIcon>
-                <ListItemText style={state.orders ? { color: '#822020' } : {}} primary={'myOrders'} />
+                <ListItemText style={state.orders ? { color: '#822020' } : {}} primary={'Мои заказы'} />
               </ListItemButton>
               <ListItemButton onClick={handleClickFavorites}>
                 <ListItemIcon>
                   <FavoriteIcon style={state.favorites ? { color: '#822020' } : {}} />
                 </ListItemIcon>
-                <ListItemText style={state.favorites ? { color: '#822020' } : {}} primary={'myFavorites'} />
+                <ListItemText style={state.favorites ? { color: '#822020' } : {}} primary={'Избранные'} />
               </ListItemButton>
             </List>
           </Grid>

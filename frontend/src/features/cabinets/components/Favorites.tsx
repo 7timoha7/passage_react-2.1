@@ -31,7 +31,7 @@ const Favorites = () => {
   return (
     <>
       <Typography variant={'h5'} textAlign={'center'}>
-        Любимые товары
+        Избранные товары
       </Typography>
       {favoriteProductsLoading ? (
         <Spinner />

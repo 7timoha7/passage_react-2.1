@@ -78,10 +78,6 @@ usersRouter.get('/getByRole', auth, permit('admin', 'director'), async (req, res
       const users = await User.find({ role: 'user' }).select(['-token', '-verificationToken', '-favorites']);
       return res.send(users);
     }
-    if (roleUsers === 'hotel') {
-      const users = await User.find({ role: 'hotel' }).select(['-token', '-verificationToken', '-favorites']);
-      return res.send(users);
-    }
   } catch (e) {
     return next(e);
   }
@@ -184,57 +180,6 @@ usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user', 'admin', 
     return next(e);
   }
 });
-
-// usersRouter.patch('/toggleAddProductToFavorites', auth, permit('user'), async (req, res, next) => {
-//   const user = (req as RequestWithUser).user;
-//   const addProductId = req.body.addProduct;
-//   const deleteProductId = req.body.deleteProduct;
-//   console.log(req.body);
-//
-//   try {
-//     if (addProductId) {
-//       const foundProduct = await Product.findById(addProductId);
-//       if (!foundProduct) {
-//         return res.status(404).json({ error: 'Product is not found' });
-//       }
-//
-//       if (user.favorites.includes(addProductId)) {
-//         return res.status(400).json({ message: 'The product is already in the favorites' });
-//       } else {
-//         user.favorites.push(addProductId);
-//         await user.save();
-//         return res.status(200).json({
-//           message: {
-//             en: foundProduct.name + ' added to favorites successfully',
-//             ru: foundProduct.name + ' успешно добавлен в избранное',
-//           },
-//         });
-//       }
-//     }
-//
-//     if (deleteProductId) {
-//       const foundProduct = await Product.findById(deleteProductId);
-//       if (!foundProduct) {
-//         return res.status(404).json({ error: 'Product is not found' });
-//       }
-//
-//       if (!user.favorites.includes(deleteProductId)) {
-//         return res.status(400).json({ message: 'You dont have this product in the favorites' });
-//       }
-//
-//       user.favorites = user.favorites.filter((favProduct) => favProduct.toString() !== deleteProductId);
-//       await user.save();
-//       return res.status(200).json({
-//         message: {
-//           en: foundProduct.name + ' removed from favorites successfully',
-//           ru: foundProduct.name + ' успешно уделён из избранного',
-//         },
-//       });
-//     }
-//   } catch (e) {
-//     return next(e);
-//   }
-// });
 
 usersRouter.delete('/sessions', async (req, res, next) => {
   try {
@@ -339,12 +284,25 @@ usersRouter.post('/getVerify', auth, async (req, res, next) => {
         pass: 'jczr vpof kqyp qrtj',
       },
     });
+    // const mailOptions = {
+    //   from: config.mail,
+    //   to: user.email,
+    //   subject: 'Email Verification',
+    //   text: `Please click the following link to verify your email: ${config.site}/verify/${user.verificationToken}`,
+    // };
+
+    const htmlContent = `
+      <p>Please click the following to verify your email: <a href="${config.site}/verify/${user.verificationToken}">${config.site}/verify/${user.verificationToken}</a></p>
+    `;
+
+    // Определите параметры электронной почты
     const mailOptions = {
       from: config.mail,
       to: user.email,
       subject: 'Email Verification',
-      text: `Please click the following link to verify your email: ${config.site}/verify/${user.verificationToken}`,
+      html: htmlContent,
     };
+
     transporter.sendMail(mailOptions, (error) => {
       if (error) {
         console.error('Error sending email:', error);

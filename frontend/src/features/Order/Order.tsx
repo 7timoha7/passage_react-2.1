@@ -9,9 +9,11 @@ import {
   TextField,
   Paper,
   Typography,
+  Grid,
 } from '@mui/material';
 import { MuiTelInput } from 'mui-tel-input';
 import ProductTable from './Components/ProductTable';
+import { useNavigate } from 'react-router-dom';
 
 interface FormData {
   firstName: string;
@@ -39,6 +41,7 @@ const Order = () => {
   const [deliveryMethod, setDeliveryMethod] = useState<string>('');
 
   const deliveryMethods = ['самовывоз', 'доставка'];
+  const navigate = useNavigate();
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
@@ -82,7 +85,7 @@ const Order = () => {
         margin: 'auto',
         marginTop: '10px',
         padding: '20px',
-        backgroundColor: '#fff',
+        backgroundColor: '#dfdfdf',
         borderRadius: '8px',
         boxShadow: '0 0 10px rgba(0, 0, 0, 0.1)',
       }}
@@ -174,9 +177,18 @@ const Order = () => {
           rows={4}
           style={{ marginBottom: '15px' }}
         />
-        <Button variant="contained" color="primary" type="submit" style={{ marginTop: '15px' }}>
-          Отправить заказ
-        </Button>
+        <Grid container spacing={2}>
+          <Grid item>
+            <Button variant="contained" color="error" type="submit">
+              Заказать
+            </Button>
+          </Grid>
+          <Grid item>
+            <Button variant="outlined" color="error" onClick={() => navigate(-1)}>
+              Назад
+            </Button>
+          </Grid>
+        </Grid>
       </form>
     </Paper>
   );

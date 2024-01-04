@@ -22,11 +22,11 @@ const ConfirmPage = () => {
   }, [dispatch, token, navigateToCabinet]);
   return (
     <Container>
-      <Typography sx={{ display: 'inline-block' }} variant="h4">
-        {'navigateText'}
+      <Typography sx={{ display: 'inline-block' }} variant="h5">
+        {'Вы будете автоматически переведены в свой кабинет через 5 сек. . .  или вы можете перейти самостоятельно :'}
       </Typography>{' '}
       <Button onClick={navigateToCabinet} variant="text" color="primary">
-        {'navigateButton'}
+        {'перейти'}
       </Button>
     </Container>
   );

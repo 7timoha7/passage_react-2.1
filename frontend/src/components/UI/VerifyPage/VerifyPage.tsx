@@ -32,10 +32,10 @@ const VerifyPage = () => {
         <>
           <ModalCover state={open}>
             <Typography sx={{ display: 'inline-block' }} variant="body1" textAlign="center">
-              {'verifyHeader'}, {'verifyMail'}
+              {'Вы не подтвердили свой email'}, {'для получения письма подтверждения нажмите на кнопку'}
             </Typography>
             <Button variant="outlined" onClick={onButtonClick} disabled={active}>
-              {'sendMail'}
+              {'Отправить письмо'}
             </Button>
             <Collapse in={active}>
               <Alert
@@ -43,17 +43,17 @@ const VerifyPage = () => {
                   success: <CheckCircleOutlineIcon fontSize="inherit" />,
                 }}
               >
-                {'sendSuccess'}
+                {'Письмо успешно отправленно, проверьте свой почтовый ящик. Папку входящие или Спам'}
               </Alert>
             </Collapse>
             <Button
               variant="contained"
               color="success"
               size="small"
-              style={{ margin: '10px auto', display: 'block', background: '#03C988', marginTop: '10px' }}
+              style={{ margin: '10px auto', display: 'block', background: '#dc0b0b', marginTop: '10px' }}
               onClick={goBack}
             >
-              {'back'}
+              {'Назад'}
             </Button>
           </ModalCover>
         </>

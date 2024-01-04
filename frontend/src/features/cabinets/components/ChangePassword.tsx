@@ -43,7 +43,7 @@ const ChangePassword = () => {
     if (password.password1 === password.password2) {
       setConfirmOpen(true);
     } else {
-      enqueueSnackbar('passwordError', { variant: 'error' });
+      enqueueSnackbar('Пароли не совпадают', { variant: 'error' });
     }
   };
 
@@ -61,16 +61,16 @@ const ChangePassword = () => {
   return (
     <Box textAlign={'center'}>
       <Button variant="outlined" onClick={handleClickOpen}>
-        {'changePassword'}
+        {'Изменить пароль'}
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>{'changePassword'}</DialogTitle>
+        <DialogTitle>{'Изменить пароль'}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
             margin="dense"
             id="password1"
-            label={'newPassword'}
+            label={'Новый пароль'}
             type={showPassword ? 'text' : 'password'}
             name="password1"
             fullWidth
@@ -89,7 +89,7 @@ const ChangePassword = () => {
             margin="dense"
             id="password2"
             name="password2"
-            label={'secondPassword'}
+            label={'Повторите пароль'}
             type={showPassword ? 'text' : 'password'}
             fullWidth
             variant="standard"
@@ -98,22 +98,22 @@ const ChangePassword = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>{'cancel'}</Button>
+          <Button onClick={handleClose}>{'Назад'}</Button>
           <Button
             disabled={password.password1.length < 3 || password.password2.length < 3}
             onClick={handleConfirmOpen}
             color="success"
           >
-            {'changePassword'}
+            {'Изменить пароль'}
           </Button>
         </DialogActions>
       </Dialog>
       <Dialog open={confirmOpen} onClose={handleConfirmClose}>
-        <DialogTitle>{'sure'}</DialogTitle>
+        <DialogTitle>{'Вы уверены?'}</DialogTitle>
         <DialogActions>
-          <Button onClick={handleConfirmClose}>{'cancel'}</Button>
+          <Button onClick={handleConfirmClose}>{'Назад'}</Button>
           <Button onClick={handleSubscribe} color="success">
-            {'edit'}
+            {'Изменить'}
           </Button>
         </DialogActions>
       </Dialog>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import { getByRole } from '../users/usersThunks';
 import { selectGetUsersByRoleLoading, selectUsersByRole } from '../users/usersSlice';
@@ -33,7 +33,6 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
   const dispatch = useAppDispatch();
   const loading = useAppSelector(selectGetUsersByRoleLoading);
   const gotUsers = useAppSelector(selectUsersByRole);
-  const { t } = useTranslation();
 
   const [selectedIndex, setSelectedIndex] = React.useState<number>(0);
   const [state, setState] = React.useState<CabinetState>(exist);
@@ -47,10 +46,10 @@ const DirectorCabinet: React.FC<Props> = ({ exist = initialState }) => {
   }, [dispatch, state.simpleUsers, state.admins]);
 
   const options = [
-    { option: 'myInfo', icon: <PersonIcon />, text: t('myInfo') },
-    { option: 'simpleUsers', icon: <GroupIcon />, text: t('users') },
-    { option: 'admins', icon: <WcIcon />, text: t('admins') },
-    { option: 'favorites', icon: <FavoriteIcon />, text: 'favorites' },
+    { option: 'myInfo', icon: <PersonIcon />, text: 'Моя информация' },
+    { option: 'simpleUsers', icon: <GroupIcon />, text: 'Пользователи' },
+    { option: 'admins', icon: <WcIcon />, text: 'Админы' },
+    { option: 'favorites', icon: <FavoriteIcon />, text: 'Избранное' },
   ];
 
   const handleClickOption = (option: string, index: number) => {

@@ -47,9 +47,9 @@ const AdminCabinet: React.FC<Props> = ({ exist = initialState }) => {
   };
 
   const options = [
-    { option: 'myInfo', icon: <PersonIcon />, text: 'myInfo' },
-    { option: 'users', icon: <GroupIcon />, text: 'users' },
-    { option: 'favorites', icon: <FavoriteIcon />, text: 'favorites' },
+    { option: 'myInfo', icon: <PersonIcon />, text: 'Моя информация' },
+    { option: 'users', icon: <GroupIcon />, text: 'Пользователи' },
+    { option: 'favorites', icon: <FavoriteIcon />, text: 'Избранное' },
   ];
 
   return (

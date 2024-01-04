@@ -25,8 +25,8 @@ const MyInformation = () => {
               {user.firstName} {user.lastName}
             </Typography>
           </Box>
-          <CurveText name="phoneNumber" data={user.phoneNumber} />
-          <CurveText name="email" data={user.email} />
+          <CurveText name="Телефон" data={user.phoneNumber} />
+          <CurveText name="Почта" data={user.email} />
           <ChangePassword />
         </>
       )}

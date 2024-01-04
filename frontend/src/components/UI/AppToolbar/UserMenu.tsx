@@ -61,7 +61,7 @@ const UserMenu: React.FC<Props> = ({ user }) => {
             </ListItemIcon>
             Мой профиль
           </MenuItem>
-          <Divider /> {/* Линия между вкладками */}
+          <Divider />
           <MenuItem onClick={handleLogout}>
             <ListItemIcon>
               <ExitToAppIcon />
