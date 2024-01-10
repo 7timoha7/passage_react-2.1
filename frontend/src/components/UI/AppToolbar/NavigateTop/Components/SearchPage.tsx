@@ -12,8 +12,6 @@ import {
 import { selectBasket } from '../../../../../features/Basket/basketSlice';
 import { searchProductsFull } from '../../../../../features/Products/productsThunks';
 import ProductCard from '../../../../../features/Products/components/ProductCard';
-import { Simulate } from 'react-dom/test-utils';
-import load = Simulate.load;
 import Spinner from '../../../Spinner/Spinner';
 
 const SearchPage: React.FC = () => {
