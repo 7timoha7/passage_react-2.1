@@ -1,5 +1,12 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { GlobalSuccess, PageInfo, ProductType, ProductTypeMutation, ValidationError } from '../../types';
+import {
+  GlobalSuccess,
+  PageInfo,
+  ProductsSearchPreview,
+  ProductType,
+  ProductTypeMutation,
+  ValidationError,
+} from '../../types';
 import axiosApi from '../../axiosApi';
 import { RootState } from '../../app/store';
 import { isAxiosError } from 'axios';
@@ -95,3 +102,46 @@ export const removeProductImage = createAsyncThunk<
     throw new Error();
   }
 });
+
+// export const searchProducts = createAsyncThunk<
+//   { products: ProductType[]; pageInfo: PageInfo },
+//   { text: string; page: number }
+// >('products/search', async ({ text, page }) => {
+//   const pageSize = 30; // Установите желаемый размер страницы
+//
+//   const response = await axiosApi.get(`/products/search?text=${text}&page=${page}&pageSize=${pageSize}`);
+//   return response.data;
+// });
+
+export const searchProductsFull = createAsyncThunk<
+  { products: ProductType[]; pageInfo: PageInfo },
+  { text: string; page: number }
+>('products/search', async ({ text, page }) => {
+  try {
+    // Проверяем, что поисковый запрос содержит минимум 3 символа
+    if (text.length < 3) {
+      throw new Error('Search term should be at least 3 characters long');
+    }
+
+    // Выполняем запрос к бэкенду с параметрами текста и страницы
+    const response = await axiosApi.get(`/products/search/get?text=${text}&page=${page}`);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+});
+
+export const searchProductsPreview = createAsyncThunk<ProductsSearchPreview, { text: string }>(
+  'products/searchPreview',
+  async ({ text }) => {
+    try {
+      // Выполняем запрос к бэкенду для предварительного поиска
+      const response = await axiosApi.get(`/products/search/preview?text=${text}`);
+      return response.data;
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
+  },
+);

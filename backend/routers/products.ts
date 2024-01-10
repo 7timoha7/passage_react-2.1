@@ -178,4 +178,52 @@ productRouter.delete('/:id/images/:index', auth, permit('admin', 'director'), as
   }
 });
 
+productRouter.get('/search/get', async (req, res, next) => {
+  try {
+    const searchTerm: string = req.query.text as string;
+    const page = req.query.page ? parseInt(req.query.page as string, 10) : 1;
+    const pageSize = 20;
+    if (searchTerm.length < 3) {
+      return res.status(400).send('Search term should be at least 3 characters long');
+    }
+    const regex = new RegExp(searchTerm, 'i');
+    const skip = (page - 1) * pageSize;
+    const products = await Product.find({ name: { $regex: regex } })
+      .skip(skip)
+      .limit(pageSize);
+    const totalProducts = await Product.countDocuments({ name: { $regex: regex } });
+    const totalPages = Math.ceil(totalProducts / pageSize);
+
+    res.send({
+      products,
+      pageInfo: {
+        currentPage: page,
+        totalPages,
+        pageSize,
+        totalItems: totalProducts,
+      },
+    });
+  } catch (e) {
+    return next(e);
+  }
+});
+
+productRouter.get('/search/preview', async (req, res, next) => {
+  try {
+    const searchTerm: string = req.query.text as string;
+    if (searchTerm.length < 3) {
+      return res.status(400).send('Search term should be at least 3 characters long');
+    }
+    const regex = new RegExp(searchTerm, 'i');
+    const products = await Product.find({ name: { $regex: regex } }).limit(20);
+    const hasMore = products.length === 20;
+    res.send({
+      results: products,
+      hasMore,
+    });
+  } catch (e) {
+    return next(e);
+  }
+});
+
 export default productRouter;

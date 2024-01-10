@@ -26,6 +26,7 @@ import ContactsPage from './components/UI/СontactsPage/СontactsPage';
 import ProductEdit from './features/Products/components/ProductEdit';
 import { selectProductSuccess, setProductSuccessNull } from './features/Products/productsSlise';
 import { selectBasketSuccess, setBasketSuccessNull } from './features/Basket/basketSlice';
+import SearchPage from './components/UI/AppToolbar/NavigateTop/Components/SearchPage';
 
 function App() {
   const user = useAppSelector(selectUser);
@@ -89,6 +90,7 @@ function App() {
         <Route path="/order/" element={<Order />} />
         <Route path="/about/" element={<AboutPage />} />
         <Route path="/contacts/" element={<ContactsPage />} />
+        <Route path="/search-results/:text" element={<SearchPage />} />
         <Route
           path="/my-cabinet"
           element={

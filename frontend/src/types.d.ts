@@ -130,3 +130,8 @@ interface PageInfo {
   pageSize: number;
   totalItems: number;
 }
+
+interface ProductsSearchPreview {
+  results: ProductType[];
+  hasMore: boolean;
+}
