@@ -89,7 +89,7 @@ const Search: React.FC = () => {
         variant={'filled'}
         size={'small'}
         color={'error'}
-        label="Поиск"
+        label="Живой поиск"
         type="search"
         value={query}
         onChange={(e) => onChange(e)}

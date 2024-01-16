@@ -27,7 +27,6 @@ export const productFetch = createAsyncThunk<ProductType, string>('products/fetc
 
 export const productsFromApi = createAsyncThunk('products/fetchFromApi', async () => {
   const products = await axiosApi.get('/productsFromApi/');
-  console.log(products.data);
   return products.data;
 });
 
@@ -54,16 +53,15 @@ export const editProduct = createAsyncThunk<
       const formData = new FormData();
 
       formData.append('name', product.name);
-      if (product.desc) {
-        formData.append('desc', product.desc);
-      }
-      formData.append('unit', product.unit);
-      formData.append('vendorCode', JSON.stringify(product.vendorCode));
-      formData.append('group', product.group);
-      formData.append('cod', product.cod);
-      formData.append('dimensions', product.dimensions);
-      formData.append('weight', product.weight);
-      formData.append('price', JSON.stringify(product.price));
+      formData.append('article', product.article);
+      formData.append('goodID', product.goodID);
+      formData.append('measureCode', product.measureCode);
+      formData.append('measureName', product.measureName);
+      formData.append('ownerID', product.ownerID);
+      formData.append('quantity', product.quantity.toString()); // Assuming quantity is a number
+      formData.append('price', product.price.toString()); // Assuming price is a number
+
+      // Add other fields as needed
 
       if (product.images) {
         for (const image of product.images) {

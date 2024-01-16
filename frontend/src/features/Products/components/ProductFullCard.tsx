@@ -142,9 +142,6 @@ const ProductFullCard: React.FC<Props> = ({ product }) => {
               <Typography variant="h5" gutterBottom>
                 {product.name}
               </Typography>
-              <Typography variant="body1" paragraph>
-                {product.desc}
-              </Typography>
               <Typography variant="subtitle1" gutterBottom>
                 Цена: {product.price} сом
               </Typography>

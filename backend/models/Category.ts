@@ -8,6 +8,14 @@ const CategorySchema = new Schema<ICategory>({
     type: String,
     required: true,
   },
+  ID: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  ownerID: {
+    type: String,
+  },
 });
 
 const Category = mongoose.model('Category', CategorySchema);

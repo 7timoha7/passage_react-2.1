@@ -43,7 +43,7 @@ productRouter.get('/', async (req, res) => {
     let query = {};
 
     if (req.query.category) {
-      query = { categoryId: req.query.category };
+      query = { ownerID: req.query.category };
     }
 
     const totalProducts = await Product.countDocuments(query);
@@ -91,59 +91,59 @@ productRouter.get('/get/favorites', auth, async (req, res, next) => {
   }
 });
 
-productRouter.patch('/:id', auth, permit('admin', 'director'), imagesUpload.array('images'), async (req, res, next) => {
-  try {
-    const product: HydratedDocument<IProduct> | null = await Product.findById(req.params.id);
-    if (!product) {
-      return res.status(404).send({ message: 'Not found product!' });
-    }
-    product.categoryId = req.body.categoryId;
-    product.name = req.body.name;
-    product.desc = req.body.desc;
-    product.unit = req.body.unit;
-    product.vendorCode = JSON.parse(req.body.vendorCode);
-    product.group = req.body.group;
-    product.cod = req.body.cod;
-    product.dimensions = req.body.dimensions;
-    product.weight = req.body.weight;
-    product.price = JSON.parse(req.body.price);
-
-    if (req.files) {
-      if (product.images) {
-        const uploadedImages = (req.files as Express.Multer.File[]).map((file) => file.filename);
-        product.images.push(...uploadedImages);
-      } else {
-        product.images = (req.files as Express.Multer.File[]).map((file) => file.filename);
-      }
-    }
-
-    await Product.findByIdAndUpdate(req.params.id, {
-      categoryId: product.categoryId,
-      name: product.name,
-      desc: product?.desc,
-      unit: product.unit,
-      vendorCode: product.vendorCode,
-      group: product.group,
-      cod: product.cod,
-      dimensions: product.dimensions,
-      weight: product.weight,
-      images: product.images,
-      price: product.price,
-    });
-
-    return res.send({
-      message: {
-        en: 'Product updated successfully',
-        ru: 'Продукт успешно изменен',
-      },
-    });
-  } catch (error) {
-    if (error instanceof mongoose.Error.ValidationError) {
-      return res.status(400).send(error);
-    }
-    return next(error);
-  }
-});
+// productRouter.patch('/:id', auth, permit('admin', 'director'), imagesUpload.array('images'), async (req, res, next) => {
+//   try {
+//     const product: HydratedDocument<IProduct> | null = await Product.findById(req.params.id);
+//     if (!product) {
+//       return res.status(404).send({ message: 'Not found product!' });
+//     }
+//     product.categoryId = req.body.categoryId;
+//     product.name = req.body.name;
+//     product.desc = req.body.desc;
+//     product.unit = req.body.unit;
+//     product.vendorCode = JSON.parse(req.body.vendorCode);
+//     product.group = req.body.group;
+//     product.cod = req.body.cod;
+//     product.dimensions = req.body.dimensions;
+//     product.weight = req.body.weight;
+//     product.price = JSON.parse(req.body.price);
+//
+//     if (req.files) {
+//       if (product.images) {
+//         const uploadedImages = (req.files as Express.Multer.File[]).map((file) => file.filename);
+//         product.images.push(...uploadedImages);
+//       } else {
+//         product.images = (req.files as Express.Multer.File[]).map((file) => file.filename);
+//       }
+//     }
+//
+//     await Product.findByIdAndUpdate(req.params.id, {
+//       categoryId: product.categoryId,
+//       name: product.name,
+//       desc: product?.desc,
+//       unit: product.unit,
+//       vendorCode: product.vendorCode,
+//       group: product.group,
+//       cod: product.cod,
+//       dimensions: product.dimensions,
+//       weight: product.weight,
+//       images: product.images,
+//       price: product.price,
+//     });
+//
+//     return res.send({
+//       message: {
+//         en: 'Product updated successfully',
+//         ru: 'Продукт успешно изменен',
+//       },
+//     });
+//   } catch (error) {
+//     if (error instanceof mongoose.Error.ValidationError) {
+//       return res.status(400).send(error);
+//     }
+//     return next(error);
+//   }
+// });
 
 productRouter.delete('/:id/images/:index', auth, permit('admin', 'director'), async (req, res, next) => {
   try {

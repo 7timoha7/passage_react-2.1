@@ -1,12 +1,16 @@
-import { Grid, Paper, Typography } from '@mui/material';
+import { Button, Grid, Paper, Typography } from '@mui/material';
 import advantages1 from '../../../assets/images/advantages/advantage_1.png';
 import advantages2 from '../../../assets/images/advantages/advantage_2.png';
 import advantages3 from '../../../assets/images/advantages/advantage_3.png';
 import React from 'react';
+import { useAppDispatch } from '../../../app/hooks';
+import { productsFromApi } from '../../../features/Products/productsThunks';
 
 const AboutPage = () => {
+  const dispatch = useAppDispatch();
   return (
     <Paper sx={{ p: 4 }}>
+      <Button onClick={() => dispatch(productsFromApi())}>getApi</Button>
       <Typography variant="h4" gutterBottom>
         О нас
       </Typography>

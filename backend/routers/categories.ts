@@ -31,7 +31,7 @@ categoryRouter.get('/', async (req, res, next) => {
 
 categoryRouter.get('/:id', async (req, res, next) => {
   try {
-    const categoryRes = await Category.findById(req.params.id);
+    const categoryRes = await Category.findOne({ ID: req.params.id });
     return res.send(categoryRes);
   } catch (e) {
     return next(e);

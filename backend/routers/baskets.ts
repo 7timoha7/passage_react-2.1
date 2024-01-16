@@ -275,7 +275,7 @@ basketRouter.patch('/:sessionKey', async (req, res, next) => {
   }
 });
 
-const calculateTotalPrice = async (items: { product: mongoose.Schema.Types.ObjectId; quantity: number }[]) => {
+export const calculateTotalPrice = async (items: { product: mongoose.Schema.Types.ObjectId; quantity: number }[]) => {
   let total = 0;
   for (const item of items) {
     const product = await Product.findById(item.product);

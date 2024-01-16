@@ -67,7 +67,7 @@ const ProductCard: React.FC<Props> = ({ product, indicator }) => {
       <Card
         onClick={() => navigate('/product/' + product._id)}
         sx={{
-          width: 345,
+          width: 300,
           display: 'flex',
           flexDirection: 'column',
           position: 'relative',
@@ -75,6 +75,14 @@ const ProductCard: React.FC<Props> = ({ product, indicator }) => {
           '&:hover': {
             boxShadow: indicator ? 'none' : '0px 0px 10px 2px rgba(255,0,0,0.75)',
           },
+          '@media (max-width:600px)': {
+            // Adjust styles for screens with a minimum width of 600px
+            width: '200px', // Set a specific width for larger screens
+          },
+          // '@media (min-width:960px)': {
+          //   // Adjust styles for screens with a minimum width of 960px
+          //   width: '32%', // Set a different width for even larger screens
+          // },
         }}
       >
         <CardMedia component="img" height="194" image={imgProduct} alt="Product" />

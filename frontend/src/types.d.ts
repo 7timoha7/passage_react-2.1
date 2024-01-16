@@ -52,20 +52,20 @@ export interface GlobalSuccess {
 export interface CategoriesType {
   _id: string;
   name: string;
+  ID: string;
+  ownerID?: string;
 }
 
 export interface ProductType {
   _id: string;
-  categoryId: string;
   name: string;
-  desc?: string;
-  unit: string;
-  vendorCode: number;
-  group: string;
-  cod: string;
-  dimensions: string;
-  weight: string;
+  article: string;
+  goodID: string;
+  measureCode: string;
+  measureName: string;
+  ownerID: string;
   images: string[];
+  quantity: number;
   price: number;
 }
 
@@ -75,16 +75,14 @@ export interface ImgType {
 
 export interface ProductTypeMutation {
   _id: string;
-  categoryId: string;
   name: string;
-  desc?: string;
-  unit: string;
-  vendorCode: number;
-  group: string;
-  cod: string;
-  dimensions: string;
-  weight: string;
+  article: string;
+  goodID: string;
+  measureCode: string;
+  measureName: string;
+  ownerID: string;
   images?: File[];
+  quantity: number;
   price: number;
 }
 

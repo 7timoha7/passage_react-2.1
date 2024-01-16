@@ -16,17 +16,15 @@ import { LoadingButton } from '@mui/lab';
 const ProductEdit = () => {
   const [state, setState] = useState<ProductTypeMutation>({
     _id: '',
-    categoryId: '',
     name: '',
-    desc: '',
-    unit: '',
-    vendorCode: 0,
-    group: '',
-    cod: '',
-    dimensions: '',
-    weight: '',
+    ownerID: '',
     images: [],
     price: 0,
+    article: '',
+    goodID: '',
+    measureCode: '',
+    measureName: '',
+    quantity: 0,
   });
 
   const [stateImg, setStateImg] = useState<ImgType>({
@@ -54,15 +52,13 @@ const ProductEdit = () => {
       setState((prevState) => ({
         ...prevState,
         _id: oneProduct._id,
-        categoryId: oneProduct.categoryId,
         name: oneProduct.name,
-        desc: oneProduct.desc,
-        unit: oneProduct.unit,
-        vendorCode: oneProduct.vendorCode,
-        group: oneProduct.group,
-        cod: oneProduct.cod,
-        dimensions: oneProduct.dimensions,
-        weight: oneProduct.weight,
+        ownerID: oneProduct.ownerID,
+        quantity: oneProduct.quantity,
+        measureName: oneProduct.measureName,
+        goodID: oneProduct.goodID,
+        article: oneProduct.article,
+        measureCode: oneProduct.measureCode,
         price: oneProduct.price,
       }));
     }
@@ -93,8 +89,6 @@ const ProductEdit = () => {
     const { name, files } = e.target;
 
     if (files) {
-      // const image = await resizeFile(files[0]);
-
       setStateImg((prev) => ({
         ...prev,
         [name]: files[0],
@@ -105,8 +99,8 @@ const ProductEdit = () => {
   const onClickAdd = async () => {
     if (stateImg.image) {
       const mass = state.images;
-      await mass?.push(stateImg.image);
-      await setState((prev) => ({ ...prev, images: mass }));
+      mass?.push(stateImg.image);
+      setState((prev) => ({ ...prev, images: mass }));
     }
   };
 
@@ -122,7 +116,7 @@ const ProductEdit = () => {
   const onSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     await dispatch(editProduct(state));
-    await navigate('/product/' + state._id);
+    navigate('/product/' + state._id);
   };
 
   const deleteOldImg = async (productId: string, imageIndex: number) => {
@@ -157,20 +151,6 @@ const ProductEdit = () => {
                     autoComplete="current-place"
                     onChange={inputChangeHandler}
                     value={state.name}
-                    required
-                  />
-                </Grid>
-                <Grid item xs mt={3}>
-                  <TextField
-                    label={'Описание'}
-                    type="text"
-                    name="desc"
-                    // inputProps={{ minLength: 150, maxLength: 300 }}
-                    autoComplete="current-description"
-                    value={state.desc}
-                    onChange={inputChangeHandler}
-                    multiline
-                    rows={4}
                     required
                   />
                 </Grid>
