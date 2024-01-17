@@ -5,7 +5,6 @@ import path from 'path';
 import * as fs from 'fs';
 import Product from '../models/Product';
 import Category from '../models/Category';
-import { Types } from 'mongoose';
 
 const productFromApiRouter = express.Router();
 
